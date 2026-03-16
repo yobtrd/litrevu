@@ -1,0 +1,11 @@
+<div style="border: 1px solid black; margin: 10px; padding: 5px;">
+    <p>{{ review.user}} a publié une critique</p>
+    <p>{{ review.time_created }}</p>
+    <p>{{ review.headline }} - {{ review.rating }}</p>
+    <p>{{ review.body }}</p>
+    <div style="border: 1px solid black; margin: 10px; padding: 5px;">
+        <p>Ticket - {{ review.ticket.user }}</p>
+        <p>{{ review.ticket.title }}</p>
+        <p>{{ review.ticket.image }}</p>
+    </div>
+</div>

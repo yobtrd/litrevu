@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    {% for ticket in tickets %}
+        {% include 'core/partials/ticket_snippet.html' %}
+        <button><a href="{% url 'change_ticket' ticket.id %}">Modifier</a></button>
+        <button><a href="{% url 'delete_ticket' ticket.id %}">Supprimer</a></button>
+    {% endfor %}
+    {% for review in reviews %}
+        {% include 'core/partials/review_snippet.html' %}
+        <button><a href="{% url 'change_review' review.ticket.id review.id %}">Modifier</a></button>
+        <button><a href="{% url 'delete_review' review.ticket.id review.id %}">Supprimer</a></button>
+    {% endfor %}
+
+{% endblock content %}

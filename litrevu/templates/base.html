@@ -1,0 +1,26 @@
+<html>
+
+    <head>
+        <title>LITRevu</title>
+    </head>
+
+    <body>
+        <header>
+            <h1>LITReview</h1>
+            {% if user.is_authenticated %}
+                <p><a href="{% url 'home' %}">Flux</a></p>
+                <p><a href="{% url 'posts' %}">Posts</a></p>
+                <p>Abonnements</p>
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Se déconnecter</button>
+                </form>
+            {%  endif %}
+        </header>
+
+        {% block content %}{% endblock content %}
+
+
+    </body>
+
+</html>
