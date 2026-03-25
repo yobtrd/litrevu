@@ -1,7 +1,10 @@
+{% load core_extras %}
 <div style="border: 1px solid black; margin: 10px; padding: 5px;">
-<p> {{ ticket.user }} a demandé une critique</p>
-<p>{{ ticket.time_created }}</p>
-<p>{{ ticket.title }}</p>
-<p>{{ ticket.description }}</p>
-<p>{{ ticket.image }}</p>
+    <p> {% get_user_display ticket.user %} demandé une critique</p>
+    <p>{{ ticket.time_created }}</p>
+    <p>{{ ticket.title }}</p>
+    <p>{{ ticket.description }}</p>
+    {% if ticket.image %}
+        <img src="{{ ticket.image.url }}">
+    {% endif %}
 </div>

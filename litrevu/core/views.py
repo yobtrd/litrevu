@@ -1,23 +1,48 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.db.models import Q, CharField, Value
 from django.shortcuts import render, redirect, get_object_or_404
 
+from itertools import chain
 
-from core.forms import TicketForm, ReviewForm
-from core.models import Ticket, Review
+from accounts.models import User
+from core.forms import TicketForm, ReviewForm, FollowsForm
+from core.models import Ticket, Review, UserFollows
 
 
 @login_required
-def home(request):
-    tickets = Ticket.objects.all()
-    reviews = Review.objects.all()
-    return render(request, 'core/home.html', context={'tickets': tickets, 'reviews': reviews})
+def feed(request):
+    tickets = get_feed_tickets(request.user)
+    reviews = get_feed_reviews(request.user)
+    posts = get_posts_feed(tickets, reviews)
+    return render(request, 'core/feed.html', context={'posts': posts})
+
+
+def get_feed_tickets(user):
+    return Ticket.objects.filter(
+        Q(user=user) |
+        Q(user__in=user.following.values('followed_user')))
+
+
+def get_feed_reviews(user):
+    return Review.objects.filter(
+        Q(user=user) |
+        Q(user__in=user.following.values('followed_user')) |
+        Q(ticket__user=user))
 
 
 @login_required
 def posts(request):
     tickets = Ticket.objects.filter(user=request.user)
     reviews = Review.objects.filter(user=request.user)
-    return render(request, 'core/posts.html', context={'tickets': tickets, 'reviews': reviews})
+    posts = get_posts_feed(tickets, reviews)
+    return render(request, 'core/posts.html', context={'posts': posts})
+
+
+def get_posts_feed(tickets, reviews):
+    tickets = tickets.annotate(content_type=Value('TICKET', CharField()))
+    reviews = reviews.annotate(content_type=Value('REVIEW', CharField()))
+    return sorted(chain(tickets, reviews), key=lambda post: post.time_created, reverse=True)
 
 
 @login_required
@@ -29,7 +54,7 @@ def create_ticket(request):
             ticket = ticket_form.save(commit=False)
             ticket.user = request.user
             ticket.save()
-            return redirect('home')
+            return redirect('feed')
     return render(request, 'core/create_ticket.html', context={'ticket_form': ticket_form})
 
 
@@ -66,7 +91,7 @@ def create_review(request, ticket_id):
             review.user = request.user
             review.ticket = ticket
             review.save()
-            return redirect('home')
+            return redirect('feed')
     return render(request, 'core/create_review.html', context={'review_form': review_form, 'ticket': ticket})
 
 
@@ -93,3 +118,46 @@ def delete_review(request, ticket_id, review_id):
         return redirect('posts')
     return render(request, 'core/delete_review.html', context={'ticket': ticket, 'review': review})
 
+
+@login_required
+def create_ticket_and_review(request):
+    ticket_form = TicketForm()
+    review_form = ReviewForm()
+    if request.method == 'POST':
+        ticket_form = TicketForm(request.POST, request.FILES)
+        review_form = ReviewForm(request.POST)
+        if all([ticket_form.is_valid(), review_form.is_valid()]):
+            ticket = ticket_form.save(commit=False)
+            ticket.user = request.user
+            ticket.save()
+            review = review_form.save(commit=False)
+            review.user = request.user
+            review.ticket = ticket 
+            review.save()
+            return redirect('feed')
+    return render(request, 'core/create_ticket_review.html', context={'ticket_form': ticket_form, 'review_form': review_form})
+
+
+@login_required
+def follow_user(request):
+    follows_form = FollowsForm()
+    following = request.user.following.all()
+    followers = request.user.followed_by.all()
+    if request.method == 'POST':
+        follows_form = FollowsForm(request.POST)
+        if follows_form.is_valid():
+            try:
+                user_to_follow = User.objects.get(username=follows_form.cleaned_data['username'])
+                follow = UserFollows()
+                follow.followed_user = user_to_follow
+                follow.user = request.user
+                follow.save()
+            except User.DoesNotExist:
+                messages.error(request, "Cet utilisateur n'existe pas")
+    return render(request, 'core/follow.html', context={'follows_form': follows_form, 'following': following, 'followers': followers})
+
+
+@login_required
+def unfollow_user(request, follows_id):
+    UserFollows.objects.get(id=follows_id, user=request.user).delete()
+    return redirect('follow')

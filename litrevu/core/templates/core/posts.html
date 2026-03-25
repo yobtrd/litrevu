@@ -2,15 +2,16 @@
 
 {% block content %}
 
-    {% for ticket in tickets %}
-        {% include 'core/partials/ticket_snippet.html' %}
-        <button><a href="{% url 'change_ticket' ticket.id %}">Modifier</a></button>
-        <button><a href="{% url 'delete_ticket' ticket.id %}">Supprimer</a></button>
-    {% endfor %}
-    {% for review in reviews %}
-        {% include 'core/partials/review_snippet.html' %}
-        <button><a href="{% url 'change_review' review.ticket.id review.id %}">Modifier</a></button>
-        <button><a href="{% url 'delete_review' review.ticket.id review.id %}">Supprimer</a></button>
+    {% for post in posts %}
+        {% if post.content_type == 'TICKET' %}
+            {% include 'core/partials/ticket_snippet.html' with ticket=post %}
+            <button><a href="{% url 'change_ticket' post.id %}">Modifier</a></button>
+            <button><a href="{% url 'delete_ticket' post.id %}">Supprimer</a></button>
+        {% elif post.content_type == 'REVIEW' %}
+            {% include 'core/partials/review_snippet.html' with review=post %}
+            <button><a href="{% url 'change_review' post.ticket.id post.id %}">Modifier</a></button>
+            <button><a href="{% url 'delete_review' post.ticket.id post.id %}">Supprimer</a></button>
+        {% endif %}
     {% endfor %}
 
 {% endblock content %}

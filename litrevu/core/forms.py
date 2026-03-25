@@ -1,6 +1,6 @@
 from django import forms
 
-from core.models import Ticket, Review
+from core.models import Ticket, Review, UserFollows
 
 
 class TicketForm(forms.ModelForm):
@@ -18,3 +18,7 @@ class ReviewForm(forms.ModelForm):
             'body': 'Commentaire',
             'rating': 'Note'
             }
+
+
+class FollowsForm(forms.Form):
+    username = forms.CharField(label='Nom d\'utilisateur')
