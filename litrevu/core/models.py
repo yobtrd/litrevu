@@ -1,6 +1,9 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.exceptions import ValidationError
 from django.conf import settings
 from django.db import models
+
+from PIL import Image
 
 
 class Ticket(models.Model):
@@ -10,11 +13,22 @@ class Ticket(models.Model):
     image = models.ImageField(null=True, blank=True)
     time_created = models.DateTimeField(auto_now_add=True)
 
+    IMAGE_SIZE = (150, 220)
+
+    def resize_image(self):
+        image = Image.open(self.image)
+        image.thumbnail(self.IMAGE_SIZE)
+        image.save(self.image.path)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.image:
+            self.resize_image()
+
 
 class Review(models.Model):
     ticket = models.ForeignKey(to=Ticket, on_delete=models.CASCADE, related_name='reviews')
-    rating = models.PositiveSmallIntegerField(
-        max_length=1024, validators=[MinValueValidator(0), MaxValueValidator(5)])
+    rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)])
     user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     headline = models.CharField(max_length=128)
     body = models.TextField(max_length=8192, blank=True)
@@ -29,3 +43,9 @@ class UserFollows(models.Model):
 
     class Meta:
         unique_together = ('user', 'followed_user', )
+
+    def clean(self):
+        if self.user == self.followed_user:
+            raise ValidationError("Vous ne pouvez pas vous suivre vous même.", code="invalid")
+        if UserFollows.objects.filter(user=self.user, followed_user=self.followed_user).exists():
+            raise ValidationError("Vous suivez déjà cet utilisateur", code='duplicate_follow')

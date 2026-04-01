@@ -1,14 +1,14 @@
 from django.shortcuts import redirect, render
-
-from . import forms
+from django.contrib import messages
+from accounts.forms import SignUpForm
 
 
 def signup(request):
-    form = forms.SignUpForm()
+    form = SignUpForm()
     if request.method == 'POST':
-        form = forms.SignUpForm(request.POST)
+        form = SignUpForm(request.POST)
         if form.is_valid():
             form.save()
-            print("Votre compte a été enregistré")
+            messages.success(request, "Votre compte bien été créer, vous pouvez à présent vous connecter.")
             return redirect('login')
     return render(request, 'accounts/signup.html', context={'form': form})

@@ -1,6 +1,7 @@
 from django import forms
+from django.forms import RadioSelect
 
-from core.models import Ticket, Review, UserFollows
+from core.models import Ticket, Review
 
 
 class TicketForm(forms.ModelForm):
@@ -10,6 +11,12 @@ class TicketForm(forms.ModelForm):
 
 
 class ReviewForm(forms.ModelForm):
+    rating = forms.TypedChoiceField(
+        choices=[(i, i) for i in range(6)],
+        widget=RadioSelect(),
+        coerce=int
+    )
+
     class Meta:
         model = Review
         fields = ['headline', 'rating', 'body']

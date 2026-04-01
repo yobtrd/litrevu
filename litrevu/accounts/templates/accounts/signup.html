@@ -1,15 +1,12 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-    {% if form.errors %}
-        {{ form.errors }}
-    {% endif %}
-    <form method="post">
-        {{ form.as_p }}
-        {% csrf_token %}
-        <button type="submit" >S'inscrire</button>
-    </form>
-    <a href="{% url 'feed'%}">Retourner</a>
+    <h2>Inscrivez-vous</h2>
+        <form method="post">
+            {{ form.as_p }}
+            {% csrf_token %}
+            <button type="submit" >S'inscrire</button>
+        </form>
+    <button><a href="{% url 'feed'%}">Retourner</a></button>
 
 {% endblock content %}

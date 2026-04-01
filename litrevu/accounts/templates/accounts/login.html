@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    {% if  messages %}
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
     <h2>Inscrivez-vous maintenant</h1>
     <button><a href="{% url 'signup' %}">S'inscrire</a></button>
     <h2>Connectez-vous</h1>

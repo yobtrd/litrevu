@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.exceptions import ValidationError
 from django.db.models import Q, CharField, Value
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -132,7 +133,7 @@ def create_ticket_and_review(request):
             ticket.save()
             review = review_form.save(commit=False)
             review.user = request.user
-            review.ticket = ticket 
+            review.ticket = ticket
             review.save()
             return redirect('feed')
     return render(request, 'core/create_ticket_review.html', context={'ticket_form': ticket_form, 'review_form': review_form})
@@ -141,20 +142,37 @@ def create_ticket_and_review(request):
 @login_required
 def follow_user(request):
     follows_form = FollowsForm()
-    following = request.user.following.all()
-    followers = request.user.followed_by.all()
+    context = {
+        'follows_form': follows_form,
+        'following': request.user.following.all(),
+        'followers': request.user.followed_by.all(),
+        'search_results': User.objects.none(),
+    }
+
     if request.method == 'POST':
-        follows_form = FollowsForm(request.POST)
-        if follows_form.is_valid():
-            try:
-                user_to_follow = User.objects.get(username=follows_form.cleaned_data['username'])
-                follow = UserFollows()
-                follow.followed_user = user_to_follow
-                follow.user = request.user
-                follow.save()
-            except User.DoesNotExist:
-                messages.error(request, "Cet utilisateur n'existe pas")
-    return render(request, 'core/follow.html', context={'follows_form': follows_form, 'following': following, 'followers': followers})
+
+        if 'search' in request.POST:
+            username = request.POST.get('username')
+            search_results = User.objects.filter(username__icontains=username)[:5]
+            context['search_results'] = search_results
+            if not search_results.exists():
+                messages.info(request, "La recherche n'a donné aucun résultat.")
+
+        if 'follow' in request.POST:
+            follows_form = FollowsForm(request.POST)
+            if follows_form.is_valid():
+                try:
+                    user_to_follow = User.objects.get(username=follows_form.cleaned_data['username'])
+                    follow = UserFollows(user=request.user, followed_user=user_to_follow)
+                    follow.full_clean()
+                    follow.save()
+                    messages.success(request, f"Vous suivez maintenant {follow.followed_user}.")
+                except ValidationError as e:
+                    messages.error(request, e.messages[0])
+                except User.DoesNotExist:
+                    messages.error(request, f"L'utilisateur {follows_form.cleaned_data['username']} n'existe pas.")
+
+    return render(request, 'core/follow.html', context=context)
 
 
 @login_required

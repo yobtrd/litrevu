@@ -2,23 +2,42 @@
 
 {% block content %}
 
-    <p>Suivre d'autre utilisateur</p>
+    <p>Suivre d'autres utilisateurs</p>
+
     <form method="post">
         {{ follows_form.as_p }}
         {% csrf_token %}
-        <button type="submit">Envoyer</button>
+        <button type="submit" name="follow">Suivre</button>
+        <button type="submit" name="search">Rechercher</button>
     </form>
+
+    {% if search_results %}
+        {% for user in search_results %}
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="username" value="{{ user.username }}">
+            <div>
+                {{ user.username }} 
+                <button type="submit" name="follow">Suivre</button>
+            </div>
+        </form>
+        {% endfor %}
+    {% endif %}
+
     {% if messages %}
         {% for message in messages %}
         <p>{{ message }}</p>
         {% endfor %}
     {% endif %}
+
     <p>Abonnements</p>
     {% for follow in following %}
         {{ follow.followed_user.username }} <a href="{% url 'unfollow' follow.id %}">Désabonner</a><br> 
     {% endfor %}
+
     <p>Abonnés</p>
     {% for follower in followers %}
         {{ follower.user.username }}<br>
     {% endfor %}
+
 {% endblock content %}
