@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, PermissionDenied
 from django.db.models import Q, CharField, Value
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -46,6 +46,26 @@ def get_posts_feed(tickets, reviews):
     return sorted(chain(tickets, reviews), key=lambda post: post.time_created, reverse=True)
 
 
+def check_object_owner(model_object, id, owner='user'):
+    def decorator(func):
+        def wrapper(request, *args, **kwargs):
+            object = get_object_or_404(model_object, id=kwargs[id])
+            if getattr(object, owner) != request.user:
+                raise PermissionDenied
+            return func(request, *args, **kwargs)
+        return wrapper
+    return decorator
+
+
+def check_existing_review(func):
+    def wrapper(request, *args, **kwargs):
+        ticket = get_object_or_404(Ticket, id=kwargs['ticket_id'])
+        if ticket.reviews.exists():
+            raise PermissionDenied
+        return func(request, *args, **kwargs)
+    return wrapper
+
+
 @login_required
 def create_ticket(request):
     ticket_form = TicketForm()
@@ -60,6 +80,7 @@ def create_ticket(request):
 
 
 @login_required
+@check_object_owner(Ticket, 'ticket_id')
 def change_ticket(request, ticket_id):
     ticket = Ticket.objects.get(id=ticket_id)
     if request.method == 'POST':
@@ -73,6 +94,7 @@ def change_ticket(request, ticket_id):
 
 
 @login_required
+@check_object_owner(Ticket, 'ticket_id')
 def delete_ticket(request, ticket_id):
     ticket = Ticket.objects.get(id=ticket_id)
     if request.method == 'POST':
@@ -82,6 +104,7 @@ def delete_ticket(request, ticket_id):
 
 
 @login_required
+@check_existing_review
 def create_review(request, ticket_id):
     ticket = get_object_or_404(Ticket, id=ticket_id)
     review_form = ReviewForm()
@@ -97,6 +120,7 @@ def create_review(request, ticket_id):
 
 
 @login_required
+@check_object_owner(Review, 'review_id')
 def change_review(request, ticket_id, review_id):
     ticket = Review.objects.get(id=ticket_id)
     review = Review.objects.get(id=review_id)
@@ -111,6 +135,7 @@ def change_review(request, ticket_id, review_id):
 
 
 @login_required
+@check_object_owner(Review, 'review_id')
 def delete_review(request, ticket_id, review_id):
     ticket = Ticket.objects.get(id=ticket_id)
     review = Review.objects.get(id=review_id)
