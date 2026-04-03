@@ -26,7 +26,9 @@ urlpatterns = [
     path('ticket/<int:ticket_id>/review/<int:review_id>/delete/', core.views.delete_review, name='delete_review'),
     path('ticket/create_ticket_review/', core.views.create_ticket_and_review, name='create_ticket_review'),
     path('follow/', core.views.follow_user, name='follow'),
-    path('follow/<int:follows_id>/unfollow/', core.views.unfollow_user, name='unfollow')
+    path('follow/<int:follows_id>/unfollow/', core.views.unfollow_user, name='unfollow'),
+    path('block/<int:user_id>/', core.views.block_user, name='block'),
+    path('block/<int:block_id>/unblock', core.views.unblock_user, name='unblock')
 ]
 if settings.DEBUG:
     urlpatterns += static(

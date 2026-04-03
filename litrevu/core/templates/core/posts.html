@@ -2,16 +2,32 @@
 
 {% block content %}
 
-    {% for post in posts %}
-        {% if post.content_type == 'TICKET' %}
-            {% include 'core/partials/ticket_snippet.html' with ticket=post %}
-            <button><a href="{% url 'change_ticket' post.id %}">Modifier</a></button>
-            <button><a href="{% url 'delete_ticket' post.id %}">Supprimer</a></button>
-        {% elif post.content_type == 'REVIEW' %}
-            {% include 'core/partials/review_snippet.html' with review=post %}
-            <button><a href="{% url 'change_review' post.ticket.id post.id %}">Modifier</a></button>
-            <button><a href="{% url 'delete_review' post.ticket.id post.id %}">Supprimer</a></button>
+    {% if page_obj %}
+        {% for post in page_obj %}
+            {% if post.content_type == 'TICKET' %}
+                {% include 'core/partials/ticket_snippet.html' with ticket=post %}
+                <button><a href="{% url 'change_ticket' post.id %}">Modifier</a></button>
+                <button><a href="{% url 'delete_ticket' post.id %}">Supprimer</a></button>
+            {% elif post.content_type == 'REVIEW' %}
+                {% include 'core/partials/review_snippet.html' with review=post %}
+                <button><a href="{% url 'change_review' post.ticket.id post.id %}">Modifier</a></button>
+                <button><a href="{% url 'delete_review' post.ticket.id post.id %}">Supprimer</a></button>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <p>Vos critiques et demande de critiques seront affichées et modifiables ici une fois créées.</p>
+    {% endif %}
+
+    <div>
+        {% if page_obj.has_previous %}
+            <a href="?page=1">Première</a>
+            <a href="?page={{ page_obj.previous_page_number }}">Précédente</a>
         {% endif %}
-    {% endfor %}
+        <span>Page {{ page_obj.number }}/{{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Suivante</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">Dernière</a>
+        {% endif %}
+    <div>
 
 {% endblock content %}

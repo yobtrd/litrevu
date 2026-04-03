@@ -46,6 +46,18 @@ class UserFollows(models.Model):
 
     def clean(self):
         if self.user == self.followed_user:
-            raise ValidationError("Vous ne pouvez pas vous suivre vous même.", code="invalid")
+            raise ValidationError("Vous ne pouvez pas vous suivre vous même.", code='invalid')
         if UserFollows.objects.filter(user=self.user, followed_user=self.followed_user).exists():
             raise ValidationError("Vous suivez déjà cet utilisateur", code='duplicate_follow')
+        if UserBlock.objects.filter(blocker=self.followed_user, blocked=self.user).exists():
+            raise ValidationError("Vous ne pouvez pas suivre cet utilisateur, celui-ci vous a bloqué.", code='blocked_by_user')
+
+
+class UserBlock(models.Model):
+    blocker = models.ForeignKey(
+        to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='blocks_given')
+    blocked = models.ForeignKey(
+        to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='blocks_received')
+
+    class Meta:
+        unique_together = ('blocker', 'blocked')

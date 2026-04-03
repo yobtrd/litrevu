@@ -31,13 +31,28 @@
     {% endif %}
 
     <p>Abonnements</p>
-    {% for follow in following %}
-        {{ follow.followed_user.username }} <a href="{% url 'unfollow' follow.id %}">Désabonner</a><br> 
-    {% endfor %}
+    {%if following %}
+        {% for follow in following %}
+            {{ follow.followed_user.username }} <a href="{% url 'unfollow' follow.id %}">Désabonner</a><br> 
+        {% endfor %}
+    {% else %}
+        <p>Vous n'avez aucun abonnement pour le moment !</p>
+    {% endif %}
 
     <p>Abonnés</p>
-    {% for follower in followers %}
-        {{ follower.user.username }}<br>
-    {% endfor %}
+    {% if followers %}
+        {% for follower in followers %}
+            {{ follower.user.username }} <a href="{% url 'block' follower.id %}">Bloquer</a><br>
+        {% endfor %}
+    {% else %}
+        <p>Vous n'avez aucun abonnés pour le moment !</p>
+    {% endif %}
+
+    {% if blocked_users %}
+        <p>Bloqués</p>
+        {% for blocked_user in blocked_users %}
+            {{ blocked_user.blocked.username }} <a href="{% url 'unblock' blocked_user.id %}">Débloquer</a>
+        {% endfor %}
+    {% endif %}
 
 {% endblock content %}

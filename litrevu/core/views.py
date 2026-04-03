@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.exceptions import ValidationError, PermissionDenied
+from django.core.paginator import Paginator
 from django.db.models import Q, CharField, Value
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -8,7 +9,7 @@ from itertools import chain
 
 from accounts.models import User
 from core.forms import TicketForm, ReviewForm, FollowsForm
-from core.models import Ticket, Review, UserFollows
+from core.models import Ticket, Review, UserFollows, UserBlock
 
 
 @login_required
@@ -16,7 +17,12 @@ def feed(request):
     tickets = get_feed_tickets(request.user)
     reviews = get_feed_reviews(request.user)
     posts = get_posts_feed(tickets, reviews)
-    return render(request, 'core/feed.html', context={'posts': posts})
+
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'core/feed.html', context={'page_obj': page_obj})
 
 
 def get_feed_tickets(user):
@@ -37,7 +43,12 @@ def posts(request):
     tickets = Ticket.objects.filter(user=request.user)
     reviews = Review.objects.filter(user=request.user)
     posts = get_posts_feed(tickets, reviews)
-    return render(request, 'core/posts.html', context={'posts': posts})
+
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+                            
+    return render(request, 'core/posts.html', context={'page_obj': page_obj})
 
 
 def get_posts_feed(tickets, reviews):
@@ -82,7 +93,7 @@ def create_ticket(request):
 @login_required
 @check_object_owner(Ticket, 'ticket_id')
 def change_ticket(request, ticket_id):
-    ticket = Ticket.objects.get(id=ticket_id)
+    ticket = get_object_or_404(Ticket, id=ticket_id)
     if request.method == 'POST':
         ticket_form = TicketForm(request.POST, request.FILES, instance=ticket)
         if ticket_form.is_valid():
@@ -96,7 +107,7 @@ def change_ticket(request, ticket_id):
 @login_required
 @check_object_owner(Ticket, 'ticket_id')
 def delete_ticket(request, ticket_id):
-    ticket = Ticket.objects.get(id=ticket_id)
+    ticket = get_object_or_404(Ticket, id=ticket_id)
     if request.method == 'POST':
         ticket.delete()
         return redirect('posts')
@@ -122,8 +133,7 @@ def create_review(request, ticket_id):
 @login_required
 @check_object_owner(Review, 'review_id')
 def change_review(request, ticket_id, review_id):
-    ticket = Review.objects.get(id=ticket_id)
-    review = Review.objects.get(id=review_id)
+    review = get_object_or_404(Review, id=review_id, ticket_id=ticket_id)
     if request.method == 'POST':
         review_form = ReviewForm(request.POST, instance=review)
         if review_form.is_valid():
@@ -131,18 +141,17 @@ def change_review(request, ticket_id, review_id):
             return redirect('posts')
     else:
         review_form = ReviewForm(instance=review)
-    return render(request, 'core/change_review.html', context={'ticket': ticket, 'review_form': review_form})
+    return render(request, 'core/change_review.html', context={'review_form': review_form})
 
 
 @login_required
 @check_object_owner(Review, 'review_id')
 def delete_review(request, ticket_id, review_id):
-    ticket = Ticket.objects.get(id=ticket_id)
-    review = Review.objects.get(id=review_id)
+    review = get_object_or_404(Review, id=review_id, ticket_id=ticket_id)
     if request.method == 'POST':
         review.delete()
         return redirect('posts')
-    return render(request, 'core/delete_review.html', context={'ticket': ticket, 'review': review})
+    return render(request, 'core/delete_review.html', context={'review': review})
 
 
 @login_required
@@ -167,18 +176,20 @@ def create_ticket_and_review(request):
 @login_required
 def follow_user(request):
     follows_form = FollowsForm()
+    blocked_users = UserBlock.objects.filter(blocker=request.user)
     context = {
         'follows_form': follows_form,
         'following': request.user.following.all(),
         'followers': request.user.followed_by.all(),
         'search_results': User.objects.none(),
+        'blocked_users': blocked_users,
     }
 
     if request.method == 'POST':
 
         if 'search' in request.POST:
             username = request.POST.get('username')
-            search_results = User.objects.filter(username__icontains=username)[:5]
+            search_results = User.objects.filter(username__icontains=username).exclude(username=request.user)[:5]
             context['search_results'] = search_results
             if not search_results.exists():
                 messages.info(request, "La recherche n'a donné aucun résultat.")
@@ -203,4 +214,20 @@ def follow_user(request):
 @login_required
 def unfollow_user(request, follows_id):
     UserFollows.objects.get(id=follows_id, user=request.user).delete()
+    return redirect('follow')
+
+
+@login_required
+def block_user(request, user_id):
+    follow = get_object_or_404(UserFollows, id=user_id, followed_user=request.user)
+    blocked_user = UserBlock.objects.create(blocker=request.user, blocked=follow.user) 
+    follow.delete()
+    messages.success(request, f"Vous avez bloqué {blocked_user.blocked.username}")
+    return redirect('follow')
+
+
+@login_required
+def unblock_user(request, block_id):
+    block = get_object_or_404(UserBlock, id=block_id, blocker=request.user)
+    block.delete()
     return redirect('follow')
