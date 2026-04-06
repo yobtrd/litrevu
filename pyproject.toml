@@ -1,5 +1,13 @@
 [tool.black]
 line-length = 88
+exclude = '''
+/(
+    | migrations
+    | __pycache__
+    | .env
+    | .venv
+)/.*
+'''
 
 [tool.isort]
 profile = "black"

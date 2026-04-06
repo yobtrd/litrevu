@@ -5,5 +5,5 @@ exclude =
     __pycache__,
     migrations,
     node_modules,
-    static
+    static,
 max-line-length = 88

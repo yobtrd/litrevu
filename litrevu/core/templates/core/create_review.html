@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
+
 {% block content %}
+
     <h2>Créer une critique</h2>
     <p>Vous êtes en train de poster en réponse à</p>
     {% include 'core/partials/ticket_snippet.html' %}
@@ -9,4 +11,5 @@
         {% csrf_token %}
         <button type="submit">Envoyer</button>
     </form>
+
 {% endblock content %}

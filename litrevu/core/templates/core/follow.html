@@ -45,7 +45,7 @@
             {{ follower.user.username }} <a href="{% url 'block' follower.id %}">Bloquer</a><br>
         {% endfor %}
     {% else %}
-        <p>Vous n'avez aucun abonnés pour le moment !</p>
+        <p>Vous n'avez aucun abonné pour le moment !</p>
     {% endif %}
 
     {% if blocked_users %}
