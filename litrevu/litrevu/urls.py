@@ -4,14 +4,16 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth.views import LogoutView
-from django.urls import path
+from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("feed/", core.views.feed, name="feed"),
     path("posts/", core.views.posts, name="posts"),
     path("signup/", accounts.views.signup, name="signup"),
-    path("", accounts.views.CustomLoginView.as_view(
+    path(
+        "",
+        accounts.views.CustomLoginView.as_view(
             template_name="accounts/login.html", redirect_authenticated_user=True
         ),
         name="login",
@@ -19,14 +21,10 @@ urlpatterns = [
     path("logout/", LogoutView.as_view(next_page="feed"), name="logout"),
     path("ticket/create/", core.views.create_ticket, name="create_ticket"),
     path(
-        "ticket/<int:ticket_id>/change/",
-        core.views.change_ticket,
-        name="change_ticket"
+        "ticket/<int:ticket_id>/change/", core.views.change_ticket, name="change_ticket"
     ),
     path(
-        "ticket/<int:ticket_id>/delete/",
-        core.views.delete_ticket,
-        name="delete_ticket"
+        "ticket/<int:ticket_id>/delete/", core.views.delete_ticket, name="delete_ticket"
     ),
     path(
         "ticket/<int:ticket_id>/review/create/",
@@ -57,3 +55,6 @@ urlpatterns = [
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += [
+        path("__reload__/", include("django_browser_reload.urls")),
+    ]
