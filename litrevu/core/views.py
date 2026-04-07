@@ -95,20 +95,6 @@ def check_object_owner(model_object, id, owner="user"):
     return decorator
 
 
-def check_existing_review(func):
-    """
-    Decorator preventing duplicate reviews on tickets.
-    """
-
-    def wrapper(request, *args, **kwargs):
-        ticket = get_object_or_404(Ticket, id=kwargs["ticket_id"])
-        if ticket.reviews.exists():
-            raise PermissionDenied
-        return func(request, *args, **kwargs)
-
-    return wrapper
-
-
 @login_required
 def create_ticket(request):
     """
@@ -154,10 +140,13 @@ def delete_ticket(request, ticket_id):
 
 
 @login_required
-@check_existing_review
 def create_review(request, ticket_id):
-    """Handles review creation."""
+    """Handles review creation and prevents duplicate reviews on tickets"""
     ticket = get_object_or_404(Ticket, id=ticket_id)
+
+    if Review.objects.filter(ticket_id=ticket.id).exists():
+        raise PermissionDenied
+
     review_form = ReviewForm()
     if request.method == "POST":
         review_form = ReviewForm(request.POST)
