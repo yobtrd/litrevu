@@ -4,7 +4,7 @@
 
     <h2>Créer une critique</h2>
     <p>Vous êtes en train de poster en réponse à</p>
-    {% include 'core/partials/ticket_snippet.html' %}
+    {% include 'core/partials/ticket_snippet.html' with hide_button=True %}
     <p>Critique</p>
     <form method="post">
         {{ review_form.as_p }}

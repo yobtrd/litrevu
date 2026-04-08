@@ -10,3 +10,18 @@
   * the scope of this path.
   */
 @source "../../../**/*.{html,py,js}";
+
+@layer base {
+  h2 {
+    @apply text-xl font-bold;
+  }
+}
+
+@layer components {
+  .cta {
+    @apply font-semibold hover:text-gray-400 transition-colors duration-200;
+  }
+  .base-block {
+    @apply flex flex-col rounded-lg bg-sky-50/40 border border-gray-100 shadow-sm p-8 mt-12;
+  }
+}

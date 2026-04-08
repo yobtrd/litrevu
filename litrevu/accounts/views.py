@@ -15,6 +15,7 @@ class CustomLoginView(LoginView):
                     "title": "Veuillez remplir ce champ",
                     "aria-label": field.label,
                     "placeholder": field.label,
+                    "class": "input mb-2",
                 }
             )
             field.label = ""
