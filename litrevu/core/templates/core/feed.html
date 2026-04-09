@@ -1,12 +1,14 @@
 {% extends 'base.html' %}
+{% load el_pagination_tags %}
 
 {% block content %}
 
     <button><a href="{% url 'create_ticket' %}">Demander une critique</a></button>
     <button><a href="{% url 'create_ticket_review' %}">Créer une critique</a></button>
 
-    {% if page_obj %}
-        {% for post in page_obj %}
+    {% if posts %}
+        {% lazy_paginate posts %}
+        {% for post in posts %}
             {% if post.content_type == 'TICKET' %}
                 {% include 'core/partials/ticket_snippet.html' with ticket=post %}
                 {% if not post.reviews.exists %}
@@ -16,20 +18,11 @@
                 {% include 'core/partials/review_snippet.html' with review=post %}
             {% endif %} 
         {% endfor %}
+        {% show_more %}
     {% else %}
         <p>Abonnez-vous à des utilisateur pour voir afficher du contenu ici !</p>
     {% endif %}
 
-    <div>
-        {% if page_obj.has_previous %}
-            <a href="?page=1">Première</a>
-            <a href="?page={{ page_obj.previous_page_number }}">Précédente</a>
-        {% endif %}
-        <span>Page {{ page_obj.number }}/{{ page_obj.paginator.num_pages }}</span>
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">Suivante</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">Dernière</a>
-        {% endif %}
-    <div>
+
 
 {% endblock content %}

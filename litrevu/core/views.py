@@ -13,21 +13,26 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 @login_required
 def feed(request):
-    """
-    Main feed view showing tickets/reviews from user and followed users.
 
-    Combines and paginates posts using custom feed query methods.
-    Context contains paginated page_obj with mixed content types.
-    """
     tickets = get_feed_tickets(request.user)
     reviews = get_feed_reviews(request.user)
     posts = get_posts_feed(tickets, reviews)
 
-    paginator = Paginator(posts, 10)
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
+    return render(
+        request,
+        "core/feed.html",
+        context={
+            "posts": posts,
+        },
+    )
 
-    return render(request, "core/feed.html", context={"page_obj": page_obj})
+
+def get_consistent_context(request, extra=None):
+    base = {
+        "user": request.user,
+        "request": request,
+    }
+    return {**base, **(extra or {})}
 
 
 def get_feed_tickets(user):
