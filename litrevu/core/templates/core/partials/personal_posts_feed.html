@@ -1,0 +1,15 @@
+{% load el_pagination_tags %}
+
+{% paginate 10 posts %}
+{% for post in posts %}
+    {% if post.content_type == 'TICKET' %}
+        {% include 'core/partials/ticket_snippet.html' with ticket=post %}
+        <button><a href="{% url 'change_ticket' post.id %}">Modifier</a></button>
+        <button><a href="{% url 'delete_ticket' post.id %}">Supprimer</a></button>
+    {% elif post.content_type == 'REVIEW' %}
+        {% include 'core/partials/review_snippet.html' with review=post %}
+        <button><a href="{% url 'change_review' post.ticket.id post.id %}">Modifier</a></button>
+        <button><a href="{% url 'delete_review' post.ticket.id post.id %}">Supprimer</a></button>
+    {% endif %}
+{% endfor %}
+{% show_more "Voir plus" %}

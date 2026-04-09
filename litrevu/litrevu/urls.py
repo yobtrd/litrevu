@@ -9,7 +9,7 @@ from django.urls import path, include
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("feed/", core.views.feed, name="feed"),
-    path("posts/", core.views.posts, name="posts"),
+    path("posts/", core.views.personal_posts, name="posts"),
     path("signup/", accounts.views.signup, name="signup"),
     path(
         "",
