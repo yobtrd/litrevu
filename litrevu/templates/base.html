@@ -24,10 +24,10 @@
             {% if user.is_authenticated %}
                 <nav class="flex flex-col items-center gap-y-1 mt-12
                             lg:flex-row lg:items-center lg:mt-0 lg:relative lg:left-[380px] lg:gap-x-6">
-                    <a href="{% url 'feed' %}" class="cta">Flux</a>
-                    <a href="{% url 'posts' %}" class="cta">Posts</a>
-                    <a href="{% url 'follow' %}" class="cta">Abonnements</a>
-                    <form action="{% url 'logout' %}" method="post" class="cta">
+                    <a href="{% url 'feed' %}" class="menu-link">Flux</a>
+                    <a href="{% url 'posts' %}" class="menu-link">Posts</a>
+                    <a href="{% url 'follow' %}" class="menu-link">Abonnements</a>
+                    <form action="{% url 'logout' %}" method="post" class="menu-link">
                         {% csrf_token %}
                         <button type="submit" class="cursor-pointer">Se déconnecter</button>
                     </form>

@@ -18,10 +18,17 @@
 }
 
 @layer components {
-  .cta {
+  .menu-link {
     @apply font-semibold hover:text-gray-400 transition-colors duration-200;
+  }
+  .core-button {
+    @apply btn bg-sky-200 hover:bg-sky-100;
+  }
+  .endless_more {
+      @apply btn bg-sky-200 hover:bg-sky-100 mt-4 flex justify-center items-center mx-auto;
   }
   .base-block {
     @apply flex flex-col rounded-lg bg-sky-50/40 border border-gray-100 shadow-sm p-8 mt-12;
   }
 }
+

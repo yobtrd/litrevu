@@ -8,6 +8,6 @@
         <img src="{{ ticket.image.url }}">
     {% endif %}
     {% if not ticket.reviews.exists and not hide_button %}
-        <a href="{% url 'create_review' ticket.id %}" class="btn bg-sky-200 hover:bg-sky-100">Créer une critique à ce billet</a>
+        <a href="{% url 'create_review' ticket.id %}" class="core-button">Créer une critique à ce billet</a>
     {% endif %}
 </div>
