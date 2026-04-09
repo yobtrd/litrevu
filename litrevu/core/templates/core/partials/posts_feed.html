@@ -1,0 +1,14 @@
+{% load el_pagination_tags %}
+
+{% paginate 10 posts %}
+{% for post in posts %}
+    {% if post.content_type == 'TICKET' %}
+        {% include 'core/partials/ticket_snippet.html' with ticket=post %}
+        {% if not post.reviews.exists %}
+            <button><a href="{% url 'create_review' post.id %}">Créer une critique</a></button>
+        {% endif %}
+    {% elif post.content_type == 'REVIEW' %}
+        {% include 'core/partials/review_snippet.html' with review=post %}
+    {% endif %} 
+{% endfor %}
+{% show_more "Voir plus" %}

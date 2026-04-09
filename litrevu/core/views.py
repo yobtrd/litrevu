@@ -9,22 +9,22 @@ from django.core.exceptions import PermissionDenied, ValidationError
 from django.core.paginator import Paginator
 from django.db.models import CharField, Q, Value
 from django.shortcuts import get_object_or_404, redirect, render
+from el_pagination.decorators import page_template
 
 
 @login_required
-def feed(request):
+@page_template("core/partials/posts_feed.html")
+def feed(request, template="core/feed.html", extra_context=None):
 
     tickets = get_feed_tickets(request.user)
     reviews = get_feed_reviews(request.user)
     posts = get_posts_feed(tickets, reviews)
 
-    return render(
-        request,
-        "core/feed.html",
-        context={
-            "posts": posts,
-        },
-    )
+    context = {"posts": posts}
+    if extra_context is not None:
+        context.update(extra_context)
+
+    return render(request, template, context)
 
 
 def get_consistent_context(request, extra=None):
@@ -56,7 +56,8 @@ def get_feed_reviews(user):
 
 
 @login_required
-def posts(request):
+@page_template("core/partials/personal_posts_feed.html")
+def personal_posts(request, template="core/personal_posts.html", extra_context=None):
     """
     Personal posts view showing only the authenticated user's content.
     """
@@ -64,11 +65,11 @@ def posts(request):
     reviews = Review.objects.filter(user=request.user)
     posts = get_posts_feed(tickets, reviews)
 
-    paginator = Paginator(posts, 10)
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
+    context = {"posts": posts}
+    if extra_context is not None:
+        context.update(extra_context)
 
-    return render(request, "core/posts.html", context={"page_obj": page_obj})
+    return render(request, template, context)
 
 
 def get_posts_feed(tickets, reviews):
