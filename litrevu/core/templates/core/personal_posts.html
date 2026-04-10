@@ -3,16 +3,18 @@
 
 {% block content %}
 
-    {% if page_template %}
-        {% include page_template %}
-            {% block js %}
-                {{ block.super }}
-                <script src="http://code.jquery.com/jquery-latest.js"></script>
-                <script src="{% static 'js/el-pagination.js' %}"></script>
-                <script>$.endlessPaginate();</script>
-            {% endblock %}
-    {% else %}
-        <p>Vos contenus seront affichées et modifiables ici une fois créées.</p>
-    {% endif %}
+    <div class="base-block">
+        {% if page_template %}
+            {% include page_template %}
+                {% block js %}
+                    {{ block.super }}
+                    <script src="http://code.jquery.com/jquery-latest.js"></script>
+                    <script src="{% static 'js/el-pagination.js' %}"></script>
+                    <script>$.endlessPaginate();</script>
+                {% endblock %}
+        {% else %}
+            <p>Vos contenus seront affichées et modifiables ici une fois créées.</p>
+        {% endif %}
+    </div>
 
 {% endblock content %}

@@ -27,14 +27,18 @@
   .core-button {
     @apply btn bg-sky-200 hover:bg-sky-100;
   }
-  .endless_more {
-    @apply btn bg-sky-200 hover:bg-sky-100 mt-4 flex justify-center items-center mx-auto;
-  }
   .base-block {
-    @apply flex flex-col rounded-lg bg-sky-50/40 border border-gray-100 shadow-sm p-8 mt-12;
+    @apply flex flex-col rounded-lg bg-sky-50 border border-gray-100 shadow-sm p-8 mt-12 w-4/5 max-w-4xl mx-auto;
   }
   .toggle-password-logo {
-    @apply absolute right-2 top-[calc(50%+4px)] -translate-y-1/2 cursor-pointer text-black opacity-60;
+    @apply absolute right-2 top-[calc(50%+4px)] -translate-y-1/2 cursor-pointer text-black opacity-50;
+  }
+  /* Overridden class for django-el-pagination button and container */
+  .endless_more {
+    @apply  btn w-48 bg-sky-200 hover:bg-sky-100 mt-4 mx-auto;
+  }
+  .endless_container {
+    @apply inline-flex justify-center
   }
 }
 
