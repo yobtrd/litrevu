@@ -14,7 +14,7 @@ class FormWidgetMixin:
                     "title": "Veuillez remplir ce champ",
                     "aria-label": field.label,
                     "placeholder": field.label,
-                    "class": "input mt-2",
+                    "class": "input w-54 md:w-72 mt-2",
                 }
             )
             if "password" in name:

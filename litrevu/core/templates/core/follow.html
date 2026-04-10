@@ -1,11 +1,18 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
+
+    {% block js %}
+        {{ block.super }}
+        <script src="{% static 'js/search-follows.js' %}" defer></script>
+    {% endblock %}
 
     <p>Suivre d'autres utilisateurs</p>
 
     <form method="post">
-        {{ follows_form.as_p }}
+        {{ follows_form.username }}
+        <div id="search-results" class="hidden"></div>
         {% csrf_token %}
         <button type="submit" name="follow">Suivre</button>
         <button type="submit" name="search">Rechercher</button>

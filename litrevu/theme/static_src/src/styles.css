@@ -15,6 +15,9 @@
   h2 {
     @apply text-xl font-bold;
   }
+  input {
+    @apply md:w-72
+  }
 }
 
 @layer components {
@@ -25,10 +28,13 @@
     @apply btn bg-sky-200 hover:bg-sky-100;
   }
   .endless_more {
-      @apply btn bg-sky-200 hover:bg-sky-100 mt-4 flex justify-center items-center mx-auto;
+    @apply btn bg-sky-200 hover:bg-sky-100 mt-4 flex justify-center items-center mx-auto;
   }
   .base-block {
     @apply flex flex-col rounded-lg bg-sky-50/40 border border-gray-100 shadow-sm p-8 mt-12;
+  }
+  .toggle-password-logo {
+    @apply absolute right-2 top-[calc(50%+4px)] -translate-y-1/2 cursor-pointer text-black opacity-60;
   }
 }
 

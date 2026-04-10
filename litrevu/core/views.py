@@ -9,6 +9,7 @@ from django.core.exceptions import PermissionDenied, ValidationError
 from django.db.models import CharField, Q, Value
 from django.shortcuts import get_object_or_404, redirect, render
 from el_pagination.decorators import page_template
+from django.http import JsonResponse
 
 
 @login_required
@@ -301,3 +302,16 @@ def unblock_user(request, block_id):
     block = get_object_or_404(UserBlock, id=block_id, blocker=request.user)
     block.delete()
     return redirect("follow")
+
+
+def api_user_search(request):
+    if not request.GET.get("q"):
+        return JsonResponse({"error": "Paramètre 'q' manquant"}, status=400)
+
+    users = User.objects.filter(username__icontains=request.GET["q"]).exclude(
+        username=request.user.username
+    )[:3]
+
+    return JsonResponse(
+        {"results": [{"username": user.username, "id": user.id} for user in users]}
+    )
