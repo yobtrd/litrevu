@@ -14,7 +14,7 @@ searchInput.addEventListener('input', async (e) => {
     const data = await response.json();
     
     resultsDiv.innerHTML = data.results.map(u => `
-        <div class="p-2 hover:bg-gray-100 cursor-pointer">
+        <div>
             ${u.username}
         </div>
     `).join('');
