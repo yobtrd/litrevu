@@ -47,6 +47,7 @@ urlpatterns = [
         name="create_ticket_review",
     ),
     path("follow/", core.views.follow_user, name="follow"),
+    path("follow/api/search_user/", core.views.api_user_search, name="user_search"),
     path(
         "follow/<int:follows_id>/unfollow/", core.views.unfollow_user, name="unfollow"
     ),

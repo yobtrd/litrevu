@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
+
+    {% block js %}
+        {{ block.super }}
+        <script src="{% static 'js/password-toggle.js' %}" defer></script>
+    {% endblock %}
 
     {% if  messages %}
         {% for message in messages %}
