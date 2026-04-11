@@ -1,22 +1,22 @@
 {% load core_extras %}
 
-<div class="border border-gray-400 rounded-sm bg-white p-4 m-2">
-    <header class="flex flex-col sm:flex-row sm:justify-between sm:items-baseline">
+<div class="post-card">
+    <header class="post-header">
         <h3>{% get_user_display ticket.user %} demandé une critique</h3>
-        <time>{{ ticket.time_created|date:"d F Y à H\hi" }}</time>
+        <time class="text-sm">{{ ticket.time_created|date:"d F Y à H\hi" }}</time>
     </header>
 
-    <article class="space-y-2 mt-4">
-        <h4 class="text-lg font-semibold">{{ ticket.title }}</h4>
-        <p class="text-gray-700 max-w-[70ch]">{{ ticket.description }}</p>
+    <article class="post-article">
+        <h4>{{ ticket.title }}</h4>
+        <p class="post-p">{{ ticket.description }}</p>
         {% if ticket.image %}
             <img src="{{ ticket.image.url }}">
         {% endif %}
     </article>
 
-    {% if not ticket.reviews.exists and not hide_button %}
-        <footer class="sm:flex sm:justify-end pt-6">
-            <a href="{% url 'create_review' ticket.id %}" class="core-button">Créer une critique pour ce billet</a>
-        </footer>
-    {% endif %}
+    <footer class="sm:flex sm:justify-end pt-6">
+        {% if ticket.user != user and not ticket.reviews.exists and not hide_button %}
+            <a href="{% url 'create_review' ticket.id %}" class="core-button">Répondre au billet</a>
+        {% endif %}
+    </footer>
 </div>

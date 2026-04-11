@@ -1,19 +1,20 @@
 @import "tailwindcss";
 @variant dark (false);
 @plugin "daisyui";
-
-/**
-  * A catch-all path to Django template files, JavaScript, and Python files
-  * that contain Tailwind CSS classes and will be scanned by Tailwind to generate the final CSS file.
-  *
-  * If your final CSS file is not being updated after code changes, you may want to broaden or narrow
-  * the scope of this path.
-  */
 @source "../../../**/*.{html,py,js}";
 
 @layer base {
   h2 {
     @apply text-xl font-bold;
+  }
+  h3 {
+    @apply font-semibold
+  }
+  h4 {
+    @apply text-xl font-bold
+  }
+  h5 {
+    @apply text-sm
   }
   input {
     @apply md:w-72
@@ -25,10 +26,22 @@
     @apply font-semibold hover:text-gray-400 transition-colors duration-200;
   }
   .core-button {
-    @apply btn bg-sky-200 hover:bg-sky-100;
+    @apply btn text-gray-100 bg-sky-700 hover:bg-sky-800;
   }
   .base-block {
-    @apply flex flex-col rounded-lg bg-sky-50 border border-gray-100 shadow-sm p-8 mt-12 w-4/5 max-w-4xl mx-auto;
+    @apply flex flex-col rounded-lg bg-sky-100/50 border border-gray-100 shadow-sm p-8 mt-12 w-4/5 max-w-4xl mx-auto;
+  }
+  .post-card {
+    @apply border border-gray-400 rounded-sm shadow-md bg-gray-50 p-4 my-2 mx-2 sm:mx-12
+  }
+  .post-header {
+    @apply flex flex-col mb-4 sm:flex-row sm:justify-between sm:items-baseline
+  }
+  .post-article {
+    @apply space-y-2 mt-4 sm:pl-6
+  }
+  .post-p {
+    @apply text-gray-700 max-w-[70ch]
   }
   .toggle-password-logo {
     @apply absolute right-2 top-[calc(50%+4px)] -translate-y-1/2 cursor-pointer text-black opacity-50;

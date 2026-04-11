@@ -9,7 +9,7 @@ from django.urls import path, include
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("feed/", core.views.feed, name="feed"),
-    path("posts/", core.views.personal_posts, name="posts"),
+    path("posts/", core.views.personal_posts, name="personal_posts"),
     path("signup/", accounts.views.signup, name="signup"),
     path(
         "",
@@ -43,7 +43,7 @@ urlpatterns = [
     ),
     path(
         "ticket/create_ticket_review/",
-        core.views.create_ticket_and_review,
+        core.views.create_full_review,
         name="create_ticket_review",
     ),
     path("follow/", core.views.follow_user, name="follow"),

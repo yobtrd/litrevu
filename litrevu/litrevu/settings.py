@@ -120,14 +120,19 @@ STATICFILES_DIRS = [
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR.joinpath("media/")
+
+
+# Others
+
 AUTH_USER_MODEL = "accounts.User"
 
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "feed"
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR.joinpath("media/")
 
 # Tailwind settings
+
 NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
 TAILWIND_APP_NAME = "theme"

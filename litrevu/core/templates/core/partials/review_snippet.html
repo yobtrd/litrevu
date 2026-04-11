@@ -1,14 +1,30 @@
 {% load core_extras %}
-<div style="border: 1px solid black; margin: 10px; padding: 5px;">
-    <p>{% get_user_display review.user %} publié une critique</p>
-    <p>{{ review.time_created }}</p>
-    <p>{{ review.headline }} - {{ review.rating }}</p>
-    <p>{{ review.body }}</p>
-    <div style="border: 1px solid black; margin: 10px; padding: 5px;">
-        <p>Ticket - {% get_username_display review.ticket.user %}</p>
-        <p>{{ review.ticket.title }}</p>
+
+<div class="post-card">
+    <header class="post-header">
+        {%if review.ticket.part_of_full_review %}
+            <h3>{% get_user_display review.user %} publié une critique</h3>
+        {% else %}
+            <h3>{% get_user_display review.user %} répondu à un billet</h3>
+        {% endif %}
+        <time class="text-sm">{{ review.time_created|date:"d F Y à H\hi" }}</time>
+    </header>
+
+    <article class="post-article">
+        <h4>{{ review.headline }}</h4> - {{ review.rating }}
+        <p class="post-p">{{ review.body }}</p>
+    </article>
+
+    <footer class="post-card shadow bg-white space-y-2 mx-2 mt-6 sm:mx-12 lg:mr-42 lg:ml-12 lg:pl-6">
+        <h5 class="font-semibold">Billet - {% get_username_display review.ticket.user %}</h3>
+        <h5 class="font-bold">{{ review.ticket.title }}</h3>
         {% if review.ticket.image %}
             <img src="{{ review.ticket.image.url }}">
         {% endif %}
-    </div>
+        <div class="flex justify-center sm:justify-end">
+            {%if review.ticket.user != user and review.ticket.part_of_full_review and review.ticket.reviews.count < 2  %}
+                <a href="{% url 'create_review' review.ticket.id %}" class="core-button mt-4">Répondre au billet</a>
+            {% endif %}
+        </div>
+    </footer>
 </div>

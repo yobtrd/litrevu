@@ -16,7 +16,7 @@ from django.http import JsonResponse
 @page_template("core/partials/posts_feed.html")
 def feed(request, template="core/feed.html", extra_context=None):
 
-    tickets = get_feed_tickets(request.user)
+    tickets = get_feed_tickets(request.user).filter(part_of_full_review=False)
     reviews = get_feed_reviews(request.user)
     posts = get_posts_feed(tickets, reviews)
 
@@ -25,14 +25,6 @@ def feed(request, template="core/feed.html", extra_context=None):
         context.update(extra_context)
 
     return render(request, template, context)
-
-
-def get_consistent_context(request, extra=None):
-    base = {
-        "user": request.user,
-        "request": request,
-    }
-    return {**base, **(extra or {})}
 
 
 def get_feed_tickets(user):
@@ -150,8 +142,16 @@ def create_review(request, ticket_id):
     """Handles review creation and prevents duplicate reviews on tickets"""
     ticket = get_object_or_404(Ticket, id=ticket_id)
 
-    if Review.objects.filter(ticket_id=ticket.id).exists():
+    if ticket.user == request.user:
         raise PermissionDenied
+    if Review.objects.filter(ticket=ticket).exists():
+        if (
+            ticket.part_of_full_review
+            and Review.objects.filter(ticket=ticket).count() >= 2
+        ):
+            raise PermissionDenied
+        elif not ticket.part_of_full_review:
+            raise PermissionDenied
 
     review_form = ReviewForm()
     if request.method == "POST":
@@ -198,8 +198,8 @@ def delete_review(request, ticket_id, review_id):
 
 
 @login_required
-def create_ticket_and_review(request):
-    """Handles ticket and review creation."""
+def create_full_review(request):
+    """Handles user's full review creation."""
     ticket_form = TicketForm()
     review_form = ReviewForm()
     if request.method == "POST":
@@ -208,6 +208,7 @@ def create_ticket_and_review(request):
         if all([ticket_form.is_valid(), review_form.is_valid()]):
             ticket = ticket_form.save(commit=False)
             ticket.user = request.user
+            ticket.part_of_full_review = True
             ticket.save()
             review = review_form.save(commit=False)
             review.user = request.user
@@ -216,7 +217,7 @@ def create_ticket_and_review(request):
             return redirect("feed")
     return render(
         request,
-        "core/create_ticket_review.html",
+        "core/create_full_review.html",
         context={"ticket_form": ticket_form, "review_form": review_form},
     )
 

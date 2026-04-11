@@ -13,6 +13,7 @@ class Ticket(models.Model):
     user = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     image = models.ImageField(null=True, blank=True)
     time_created = models.DateTimeField(auto_now_add=True)
+    part_of_full_review = models.BooleanField(default=False)
 
     IMAGE_SIZE = (150, 220)
 

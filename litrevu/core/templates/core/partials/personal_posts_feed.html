@@ -11,8 +11,8 @@
     {% elif post.content_type == 'REVIEW' %}
         {% include 'core/partials/review_snippet.html' with review=post %}
         <div class="inline-flex justify-center gap-3 md:justify-end md:mr-12">
-            <a href="{% url 'change_ticket' post.id %}" class="btn btn-sm btn-soft">Modifier</a>
-            <a href="{% url 'delete_ticket' post.id %}" class="btn btn-sm btn-outline">Supprimer</a>
+            <a href="{% url 'change_review' post.ticket.id post.id %}" class="btn btn-sm btn-soft">Modifier</a>
+            <a href="{% url 'delete_review' post.ticket.id post.id %}" class="btn btn-sm btn-outline">Supprimer</a>
         </div>
     {% endif %}
 {% endfor %}
