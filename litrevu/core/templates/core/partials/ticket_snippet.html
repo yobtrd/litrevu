@@ -15,7 +15,7 @@
     </article>
 
     <footer class="sm:flex sm:justify-end pt-6">
-        {% if ticket.user != user and not ticket.reviews.exists and not hide_button %}
+        {% if not ticket.reviews.exists and not hide_button %}
             <a href="{% url 'create_review' ticket.id %}" class="core-button">Répondre au billet</a>
         {% endif %}
     </footer>

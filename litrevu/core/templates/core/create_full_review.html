@@ -1,15 +1,20 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-    <h2>Créer une critique</h2>
-    <form method="post" enctype="multipart/form-data">
-        <h3>Livre / Article</h3>
-        {{ ticket_form.as_p }}
-        <h3>Critique</h3>
-        {{ review_form.as_p }}
-        {% csrf_token %}
-        <button type="submit">Envoyer</button>
-    </form>
-
+    <div class="base-block">
+        <h2 class="crud-title ">Créer une critique</h2>
+        
+        <form method="post" enctype="multipart/form-data">
+            <div class="border-b pb-12 mb-12">
+                <h3 class="crud-title-two">Livre / Article</h3> 
+                {% include 'core/partials/ticket_form.html' %}
+            </div>
+            <h3 class="crud-title-two">Votre critique</h3>
+            {% include 'core/partials/review_form.html' %}
+            {% csrf_token %}
+            <div class="flex justify-center sm:justify-end sm:mr-4">
+                <button type="submit" class="core-button mt-4">Envoyer</button>
+            </div>
+        </form>
+    </div>
 {% endblock content %}

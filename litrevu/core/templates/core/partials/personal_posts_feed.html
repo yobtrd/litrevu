@@ -3,17 +3,18 @@
 {% paginate 10 posts %}
 {% for post in posts %}
     {% if post.content_type == 'TICKET' %}
-        {% include 'core/partials/ticket_snippet.html' with ticket=post %}
-        <div class="inline-flex justify-center gap-3 md:justify-end md:mr-12">
-            <a href="{% url 'change_ticket' post.id %}" class="btn btn-sm btn-soft">Modifier</a>
-            <a href="{% url 'delete_ticket' post.id %}" class="btn btn-sm btn-outline">Supprimer</a>
+        {% include 'core/partials/ticket_snippet.html' with ticket=post hide_button=True %}
+        <div class="personal-post-buttons-display">
+            <a href="{% url 'change_ticket' post.id %}" class="core-button btn-sm">Modifier</a>
+            <a href="{% url 'delete_ticket' post.id %}" class="delete-button btn-sm">Supprimer</a>
         </div>
     {% elif post.content_type == 'REVIEW' %}
         {% include 'core/partials/review_snippet.html' with review=post %}
-        <div class="inline-flex justify-center gap-3 md:justify-end md:mr-12">
-            <a href="{% url 'change_review' post.ticket.id post.id %}" class="btn btn-sm btn-soft">Modifier</a>
-            <a href="{% url 'delete_review' post.ticket.id post.id %}" class="btn btn-sm btn-outline">Supprimer</a>
+        <div class="personal-post-buttons-display">
+            <a href="{% url 'change_review' post.ticket.id post.id %}" class="core-button btn-sm">Modifier</a>
+            <a href="{% url 'delete_review' post.ticket.id post.id %}" class="delete-button btn-sm">Supprimer</a>
         </div>
     {% endif %}
 {% endfor %}
+
 {% show_more "Voir plus" %}

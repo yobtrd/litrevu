@@ -120,7 +120,7 @@ def change_ticket(request, ticket_id):
         ticket_form = TicketForm(request.POST, request.FILES, instance=ticket)
         if ticket_form.is_valid():
             ticket.save()
-            return redirect("posts")
+            return redirect("personal_posts")
     else:
         ticket_form = TicketForm(instance=ticket)
     return render(request, "core/change_ticket.html", {"ticket_form": ticket_form})
@@ -133,7 +133,7 @@ def delete_ticket(request, ticket_id):
     ticket = get_object_or_404(Ticket, id=ticket_id)
     if request.method == "POST":
         ticket.delete()
-        return redirect("posts")
+        return redirect("personal_posts")
     return render(request, "core/delete_ticket.html", {"ticket": ticket})
 
 
@@ -142,8 +142,6 @@ def create_review(request, ticket_id):
     """Handles review creation and prevents duplicate reviews on tickets"""
     ticket = get_object_or_404(Ticket, id=ticket_id)
 
-    if ticket.user == request.user:
-        raise PermissionDenied
     if Review.objects.filter(ticket=ticket).exists():
         if (
             ticket.part_of_full_review
@@ -178,11 +176,13 @@ def change_review(request, ticket_id, review_id):
         review_form = ReviewForm(request.POST, instance=review)
         if review_form.is_valid():
             review.save()
-            return redirect("posts")
+            return redirect("personal_posts")
     else:
         review_form = ReviewForm(instance=review)
     return render(
-        request, "core/change_review.html", context={"review_form": review_form}
+        request,
+        "core/change_review.html",
+        context={"review_form": review_form, "ticket": review.ticket},
     )
 
 
@@ -193,7 +193,7 @@ def delete_review(request, ticket_id, review_id):
     review = get_object_or_404(Review, id=review_id, ticket_id=ticket_id)
     if request.method == "POST":
         review.delete()
-        return redirect("posts")
+        return redirect("personal_posts")
     return render(request, "core/delete_review.html", context={"review": review})
 
 
@@ -273,7 +273,7 @@ def follow_user(request):
                 except User.DoesNotExist:
                     messages.error(
                         request,
-                        f"L'utilisateur {follows_form.cleaned_data['username']}"
+                        f"L'utilisateur {follows_form.cleaned_data['username']} "
                         "n'existe pas.",
                     )
 

@@ -2,11 +2,15 @@
 
 {% block content %}
 
-    <h2>Créer un ticket</h2>
-    <form method="post" enctype="multipart/form-data">
-        {{ ticket_form.as_p }}
-        {% csrf_token %}
-        <button type="submit">Envoyer</button>
-    </form>
+    <div class="base-block">
+        <h2 class="crud-title">Créer un billet</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% include 'core/partials/ticket_form.html' %}
+            {% csrf_token %}
+            <div class="crud-button-display">
+                <button type="submit" class="core-button mt-4">Envoyer</button>
+            </div>
+        </form>
+    </div>
 
 {% endblock content %}

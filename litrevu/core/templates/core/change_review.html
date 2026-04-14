@@ -1,12 +1,21 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-    <h2>Modifier votre critique</h2>
-    <form method="post">
-        {{ review_form.as_p }}
-        {% csrf_token %}
-        <button type="submit">Envoyer</button>
-    </form>
+    <div class="base-block">
+        <h2 class="crud-title">Modifier votre critique</h2>
+        <div class="border-b pb-12 mb-12">
+            <h3 class="crud-title-two">Vous êtes en train de poster en réponse à ce billet</h3>
+            {% include 'core/partials/ticket_snippet.html' with hide_button=True %}
+        </div>
+        <h3 class="crud-title-two">Votre critique</h3>
+        <form method="post">
+            {% include 'core/partials/review_form.html' %}
+            {% csrf_token %}
+            <div class="crud-button-display gap-3">
+                <button type="submit" class="core-button">Modifier</button>
+                <a href="{% url "personal_posts" %}" class="btn btn-outline">Annuler</a>
+            </div>
+        </form>
+    </div>
 
 {% endblock content %}

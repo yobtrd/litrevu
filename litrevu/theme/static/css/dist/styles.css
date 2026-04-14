@@ -7,15 +7,18 @@
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
+    --color-red-200: oklch(88.5% 0.062 18.334);
+    --color-red-300: oklch(80.8% 0.114 19.571);
     --color-sky-100: oklch(95.1% 0.026 236.824);
     --color-sky-200: oklch(90.1% 0.058 230.902);
-    --color-sky-700: oklch(50% 0.134 242.749);
-    --color-sky-800: oklch(44.3% 0.11 240.79);
-    --color-blue-50: oklch(97% 0.014 254.604);
+    --color-sky-300: oklch(82.8% 0.111 230.318);
     --color-gray-50: oklch(98.5% 0.002 247.839);
     --color-gray-100: oklch(96.7% 0.003 264.542);
+    --color-gray-200: oklch(92.8% 0.006 264.531);
+    --color-gray-300: oklch(87.2% 0.01 258.338);
     --color-gray-400: oklch(70.7% 0.022 261.325);
     --color-gray-700: oklch(37.3% 0.034 259.733);
+    --color-taupe-50: oklch(98.6% 0.002 67.8);
     --color-black: #000;
     --color-white: #fff;
     --spacing: 0.25rem;
@@ -188,6 +191,91 @@
   }
 }
 @layer utilities {
+  @layer daisyui.l1.l2.l3 {
+    .dropdown {
+      position: relative;
+      display: inline-block;
+      position-area: var(--anchor-v, bottom) var(--anchor-h, span-right);
+    }
+    .dropdown > *:not(:has(~ [class*="dropdown-content"])):focus {
+      --tw-outline-style: none;
+      outline-style: none;
+    }
+    @media (forced-colors: active) {
+      .dropdown > *:not(:has(~ [class*="dropdown-content"])):focus {
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+      }
+    }
+    .dropdown .dropdown-content {
+      position: absolute;
+    }
+    .dropdown.dropdown-close .dropdown-content, .dropdown:not(details, .dropdown-open, .dropdown-hover:hover, :focus-within) .dropdown-content, .dropdown.dropdown-hover:not(:hover) [tabindex]:first-child:focus:not(:focus-visible) ~ .dropdown-content {
+      display: none;
+      transform-origin: top;
+      opacity: 0%;
+      scale: 95%;
+    }
+    .dropdown[popover], .dropdown .dropdown-content {
+      z-index: 999;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .dropdown[popover], .dropdown .dropdown-content {
+        animation: dropdown 0.2s;
+        transition-property: opacity, scale, display;
+        transition-behavior: allow-discrete;
+        transition-duration: 0.2s;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      }
+    }
+    @starting-style {
+      .dropdown[popover], .dropdown .dropdown-content {
+        scale: 95%;
+        opacity: 0;
+      }
+    }
+    .dropdown:not(.dropdown-close).dropdown-open > [tabindex]:first-child, .dropdown:not(.dropdown-close):not(.dropdown-hover):focus > [tabindex]:first-child, .dropdown:not(.dropdown-close):focus-within > [tabindex]:first-child {
+      pointer-events: none;
+    }
+    .dropdown:not(.dropdown-close).dropdown-open .dropdown-content, .dropdown:not(.dropdown-close):not(.dropdown-hover):focus .dropdown-content, .dropdown:not(.dropdown-close):focus-within .dropdown-content {
+      opacity: 100%;
+      scale: 100%;
+    }
+    .dropdown:not(.dropdown-close).dropdown-hover:hover .dropdown-content {
+      opacity: 100%;
+      scale: 100%;
+    }
+    .dropdown:is(details) summary::-webkit-details-marker {
+      display: none;
+    }
+    .dropdown:where([popover]) {
+      background: #0000;
+    }
+    .dropdown[popover] {
+      position: fixed;
+      color: inherit;
+    }
+    @supports not (position-area: bottom) {
+      .dropdown[popover] {
+        margin: auto;
+      }
+      .dropdown[popover].dropdown-close, .dropdown[popover].dropdown-open:not(:popover-open) {
+        display: none;
+        transform-origin: top;
+        opacity: 0%;
+        scale: 95%;
+      }
+      .dropdown[popover]::backdrop {
+        background-color: color-mix(in oklab, #000 30%, #0000);
+      }
+    }
+    .dropdown[popover].dropdown-close, .dropdown[popover]:not(.dropdown-open, :popover-open) {
+      display: none;
+      transform-origin: top;
+      opacity: 0%;
+      scale: 95%;
+    }
+  }
   @layer daisyui.l1.l2.l3 {
     :where(.btn) {
       width: unset;
@@ -645,6 +733,96 @@
     }
   }
   @layer daisyui.l1.l2.l3 {
+    .checkbox {
+      border: var(--border) solid var(--input-color, var(--color-base-content));
+      position: relative;
+      display: inline-block;
+      flex-shrink: 0;
+      cursor: pointer;
+      appearance: none;
+      border-radius: var(--radius-selector);
+      padding: calc(0.25rem * 1);
+      vertical-align: middle;
+      color: var(--color-base-content);
+      box-shadow: 0 1px oklch(0% 0 0 / calc(var(--depth) * 0.1)) inset, 0 0 #0000 inset, 0 0 #0000;
+      transition: background-color 0.2s, box-shadow 0.2s;
+      --size: calc(var(--size-selector, 0.25rem) * 6);
+      width: var(--size);
+      height: var(--size);
+      background-size: auto, calc(var(--noise) * 100%);
+      background-image: none, var(--fx-noise);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .checkbox {
+        border: var(--border) solid var(--input-color, color-mix(in oklab, var(--color-base-content) 20%, #0000));
+      }
+    }
+    .checkbox:before {
+      --tw-content: "";
+      content: var(--tw-content);
+      display: block;
+      width: 100%;
+      height: 100%;
+      rotate: 45deg;
+      background-color: currentcolor;
+      opacity: 0%;
+      transition: clip-path 0.3s, opacity 0.1s, rotate 0.3s, translate 0.3s;
+      transition-delay: 0.1s;
+      clip-path: polygon(20% 100%, 20% 80%, 50% 80%, 50% 80%, 70% 80%, 70% 100%);
+      box-shadow: 0px 3px 0 0px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset;
+      font-size: 1rem;
+      line-height: 0.75;
+    }
+    .checkbox:focus-visible {
+      outline: 2px solid var(--input-color, currentColor);
+      outline-offset: 2px;
+    }
+    .checkbox:checked, .checkbox[aria-checked="true"] {
+      background-color: var(--input-color, #0000);
+      box-shadow: 0 0 #0000 inset, 0 8px 0 -4px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset, 0 1px oklch(0% 0 0 / calc(var(--depth) * 0.1));
+    }
+    .checkbox:checked:before, .checkbox[aria-checked="true"]:before {
+      clip-path: polygon(20% 100%, 20% 80%, 50% 80%, 50% 0%, 70% 0%, 70% 100%);
+      opacity: 100%;
+    }
+    @media (forced-colors: active) {
+      .checkbox:checked:before, .checkbox[aria-checked="true"]:before {
+        rotate: 0deg;
+        background-color: transparent;
+        --tw-content: "✔︎";
+        clip-path: none;
+      }
+    }
+    @media print {
+      .checkbox:checked:before, .checkbox[aria-checked="true"]:before {
+        rotate: 0deg;
+        background-color: transparent;
+        --tw-content: "✔︎";
+        clip-path: none;
+      }
+    }
+    .checkbox:indeterminate {
+      background-color: var( --input-color, var(--color-base-content) );
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .checkbox:indeterminate {
+        background-color: var( --input-color, color-mix(in oklab, var(--color-base-content) 20%, #0000) );
+      }
+    }
+    .checkbox:indeterminate:before {
+      rotate: 0deg;
+      opacity: 100%;
+      translate: 0 -35%;
+      clip-path: polygon(20% 100%, 20% 80%, 50% 80%, 50% 80%, 80% 80%, 80% 100%);
+    }
+  }
+  @layer daisyui.l1.l2 {
+    .checkbox:disabled {
+      cursor: not-allowed;
+      opacity: 20%;
+    }
+  }
+  @layer daisyui.l1.l2.l3 {
     .radio {
       position: relative;
       display: inline-block;
@@ -894,6 +1072,9 @@
   .mt-12 {
     margin-top: calc(var(--spacing) * 12);
   }
+  .mr-1 {
+    margin-right: calc(var(--spacing) * 1);
+  }
   .mb-1 {
     margin-bottom: calc(var(--spacing) * 1);
   }
@@ -905,6 +1086,12 @@
   }
   .mb-4 {
     margin-bottom: calc(var(--spacing) * 4);
+  }
+  .mb-8 {
+    margin-bottom: calc(var(--spacing) * 8);
+  }
+  .mb-12 {
+    margin-bottom: calc(var(--spacing) * 12);
   }
   @layer daisyui.l1.l2.l3 {
     .status {
@@ -973,6 +1160,15 @@
       grid-template-columns: auto minmax(auto, 1fr);
     }
   }
+  @layer daisyui.l1.l2.l3 {
+    .mask {
+      display: inline-block;
+      vertical-align: middle;
+      mask-size: contain;
+      mask-repeat: no-repeat;
+      mask-position: center;
+    }
+  }
   .block {
     display: block;
   }
@@ -992,6 +1188,9 @@
     width: calc(var(--spacing) * 8);
     height: calc(var(--spacing) * 8);
   }
+  .h-4 {
+    height: calc(var(--spacing) * 4);
+  }
   .h-12 {
     height: calc(var(--spacing) * 12);
   }
@@ -1001,11 +1200,14 @@
   .min-h-full {
     min-height: 100%;
   }
-  .w-54 {
-    width: calc(var(--spacing) * 54);
+  .w-4 {
+    width: calc(var(--spacing) * 4);
   }
   .w-full {
     width: 100%;
+  }
+  .flex-grow {
+    flex-grow: 1;
   }
   .-translate-x-1\/2 {
     --tw-translate-x: calc(calc(1 / 2 * 100%) * -1);
@@ -1046,6 +1248,9 @@
   .justify-center {
     justify-content: center;
   }
+  .gap-2 {
+    gap: calc(var(--spacing) * 2);
+  }
   .gap-3 {
     gap: calc(var(--spacing) * 3);
   }
@@ -1063,13 +1268,12 @@
   .gap-y-1 {
     row-gap: calc(var(--spacing) * 1);
   }
-  .bg-blue-50\/50 {
-    background-color: color-mix(in srgb, oklch(97% 0.014 254.604) 50%, transparent);
+  .border-b {
+    border-bottom-style: var(--tw-border-style);
+    border-bottom-width: 1px;
   }
-  @supports (color: color-mix(in lab, red, red)) {
-    .bg-blue-50\/50 {
-      background-color: color-mix(in oklab, var(--color-blue-50) 50%, transparent);
-    }
+  .bg-gray-50 {
+    background-color: var(--color-gray-50);
   }
   .bg-sky-100\/70 {
     background-color: color-mix(in srgb, oklch(95.1% 0.026 236.824) 70%, transparent);
@@ -1079,8 +1283,8 @@
       background-color: color-mix(in oklab, var(--color-sky-100) 70%, transparent);
     }
   }
-  .bg-white {
-    background-color: var(--color-white);
+  .bg-taupe-50 {
+    background-color: var(--color-taupe-50);
   }
   @layer daisyui.l1 {
     .alert-soft {
@@ -1105,6 +1309,11 @@
       }
     }
   }
+  @layer daisyui.l1.l2 {
+    .mask-star {
+      mask-image: url("data:image/svg+xml,%3csvg width='192' height='180' xmlns='http://www.w3.org/2000/svg'%3e%3cpath fill='black' d='m96 137.263-58.779 42.024 22.163-68.389L.894 68.481l72.476-.243L96 0l22.63 68.238 72.476.243-58.49 42.417 22.163 68.389z' fill-rule='evenodd'/%3e%3c/svg%3e");
+    }
+  }
   .px-6 {
     padding-inline: calc(var(--spacing) * 6);
   }
@@ -1113,6 +1322,9 @@
   }
   .pt-6 {
     padding-top: calc(var(--spacing) * 6);
+  }
+  .pb-12 {
+    padding-bottom: calc(var(--spacing) * 12);
   }
   .text-center {
     text-align: center;
@@ -1241,6 +1453,11 @@
     }
   }
   @media (width >= 40rem) {
+    .sm\:mr-4 {
+      margin-right: calc(var(--spacing) * 4);
+    }
+  }
+  @media (width >= 40rem) {
     .sm\:flex {
       display: flex;
     }
@@ -1251,18 +1468,8 @@
     }
   }
   @media (width >= 48rem) {
-    .md\:mr-12 {
-      margin-right: calc(var(--spacing) * 12);
-    }
-  }
-  @media (width >= 48rem) {
-    .md\:w-52 {
-      width: calc(var(--spacing) * 52);
-    }
-  }
-  @media (width >= 48rem) {
-    .md\:w-72 {
-      width: calc(var(--spacing) * 72);
+    .md\:mt-32 {
+      margin-top: calc(var(--spacing) * 32);
     }
   }
   @media (width >= 48rem) {
@@ -1278,11 +1485,6 @@
   @media (width >= 48rem) {
     .md\:justify-center {
       justify-content: center;
-    }
-  }
-  @media (width >= 48rem) {
-    .md\:justify-end {
-      justify-content: flex-end;
     }
   }
   @media (width >= 48rem) {
@@ -1389,6 +1591,60 @@
   }
 }
 @layer components {
+  .base-block {
+    margin-inline: auto;
+    margin-top: calc(var(--spacing) * 12);
+    display: flex;
+    width: calc(4 / 5 * 100%);
+    max-width: var(--container-4xl);
+    flex-direction: column;
+    border-radius: var(--radius-lg);
+    border-style: var(--tw-border-style);
+    border-width: 1px;
+    border-color: var(--color-gray-100);
+    background-color: color-mix(in srgb, oklch(95.1% 0.026 236.824) 50%, transparent);
+  }
+  @supports (color: color-mix(in lab, red, red)) {
+    .base-block {
+      background-color: color-mix(in oklab, var(--color-sky-100) 50%, transparent);
+    }
+  }
+  .base-block {
+    padding: calc(var(--spacing) * 8);
+    --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+  .personal-post-buttons-display {
+    margin-top: calc(var(--spacing) * 1);
+    margin-bottom: calc(var(--spacing) * 4);
+    display: inline-flex;
+    justify-content: center;
+    gap: calc(var(--spacing) * 3);
+  }
+  @media (width >= 48rem) {
+    .personal-post-buttons-display {
+      margin-right: calc(var(--spacing) * 18);
+    }
+  }
+  @media (width >= 48rem) {
+    .personal-post-buttons-display {
+      justify-content: flex-end;
+    }
+  }
+  .crud-button-display {
+    display: flex;
+    justify-content: center;
+  }
+  @media (width >= 40rem) {
+    .crud-button-display {
+      margin-right: calc(var(--spacing) * 4);
+    }
+  }
+  @media (width >= 40rem) {
+    .crud-button-display {
+      justify-content: flex-end;
+    }
+  }
   .menu-link {
     --tw-font-weight: var(--font-weight-semibold);
     font-weight: var(--font-weight-semibold);
@@ -1565,45 +1821,190 @@
     }
   }
   .core-button {
-    background-color: var(--color-sky-700);
-    color: var(--color-gray-100);
+    background-color: var(--color-sky-200);
   }
   @media (hover: hover) {
     .core-button:hover {
-      background-color: var(--color-sky-800);
+      background-color: var(--color-sky-300);
     }
   }
-  .base-block {
-    margin-inline: auto;
-    margin-top: calc(var(--spacing) * 12);
-    display: flex;
-    width: calc(4 / 5 * 100%);
-    max-width: var(--container-4xl);
-    flex-direction: column;
-    border-radius: var(--radius-lg);
-    border-style: var(--tw-border-style);
-    border-width: 1px;
-    border-color: var(--color-gray-100);
-    background-color: color-mix(in srgb, oklch(95.1% 0.026 236.824) 50%, transparent);
-  }
-  @supports (color: color-mix(in lab, red, red)) {
-    .base-block {
-      background-color: color-mix(in oklab, var(--color-sky-100) 50%, transparent);
+  @layer daisyui.l1.l2.l3 {
+    :where(.delete-button) {
+      width: unset;
     }
   }
-  .base-block {
-    padding: calc(var(--spacing) * 8);
-    --tw-shadow: 0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
-    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  .prose :where(a.delete-button:not(.btn-link)):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    text-decoration-line: none;
+  }
+  @layer daisyui.l1.l2.l3 {
+    .delete-button {
+      display: inline-flex;
+      flex-shrink: 0;
+      cursor: pointer;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: center;
+      gap: calc(0.25rem * 1.5);
+      text-align: center;
+      vertical-align: middle;
+      outline-offset: 2px;
+      webkit-user-select: none;
+      user-select: none;
+      padding-inline: var(--btn-p);
+      color: var(--btn-fg);
+      --tw-prose-links: var(--btn-fg);
+      height: var(--size);
+      font-size: var(--fontsize, 0.875rem);
+      font-weight: 600;
+      outline-color: var(--btn-color, var(--color-base-content));
+      transition-property: color, background-color, border-color, box-shadow;
+      transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+      transition-duration: 0.2s;
+      border-start-start-radius: var(--join-ss, var(--radius-field));
+      border-start-end-radius: var(--join-se, var(--radius-field));
+      border-end-start-radius: var(--join-es, var(--radius-field));
+      border-end-end-radius: var(--join-ee, var(--radius-field));
+      background-color: var(--btn-bg);
+      background-size: auto, calc(var(--noise) * 100%);
+      background-image: none, var(--btn-noise);
+      border-width: var(--border);
+      border-style: solid;
+      border-color: var(--btn-border);
+      text-shadow: 0 0.5px oklch(100% 0 0 / calc(var(--depth) * 0.15));
+      touch-action: manipulation;
+      box-shadow: 0 0.5px 0 0.5px oklch(100% 0 0 / calc(var(--depth) * 6%)) inset, var(--btn-shadow);
+      --size: calc(var(--size-field, 0.25rem) * 10);
+      --btn-bg: var(--btn-color, var(--color-base-200));
+      --btn-fg: var(--color-base-content);
+      --btn-p: 1rem;
+      --btn-border: var(--btn-bg);
+      --btn-shadow: 0 3px 2px -2px var(--btn-bg),
+      0 4px 3px -2px var(--btn-bg);
+      --btn-noise: var(--fx-noise);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .delete-button {
+        --btn-border: color-mix(in oklab, var(--btn-bg), #000 calc(var(--depth) * 5%));
+      }
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .delete-button {
+        --btn-shadow: 0 3px 2px -2px color-mix(in oklab, var(--btn-bg) calc(var(--depth) * 30%), #0000),
+      0 4px 3px -2px color-mix(in oklab, var(--btn-bg) calc(var(--depth) * 30%), #0000);
+      }
+    }
+    @media (hover: hover) {
+      .delete-button:hover {
+        --btn-bg: var(--btn-color, var(--color-base-200));
+      }
+      @supports (color: color-mix(in lab, red, red)) {
+        .delete-button:hover {
+          --btn-bg: color-mix(in oklab, var(--btn-color, var(--color-base-200)), #000 7%);
+        }
+      }
+    }
+    .delete-button:focus-visible, .delete-button:has(:focus-visible) {
+      outline-width: 2px;
+      outline-style: solid;
+      isolation: isolate;
+    }
+    .delete-button:active:not(.btn-active) {
+      translate: 0 0.5px;
+      --btn-bg: var(--btn-color, var(--color-base-200));
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .delete-button:active:not(.btn-active) {
+        --btn-bg: color-mix(in oklab, var(--btn-color, var(--color-base-200)), #000 5%);
+      }
+    }
+    .delete-button:active:not(.btn-active) {
+      --btn-border: var(--btn-color, var(--color-base-200));
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .delete-button:active:not(.btn-active) {
+        --btn-border: color-mix(in oklab, var(--btn-color, var(--color-base-200)), #000 7%);
+      }
+    }
+    .delete-button:active:not(.btn-active) {
+      --btn-shadow: 0 0 0 0 oklch(0% 0 0/0), 0 0 0 0 oklch(0% 0 0/0);
+    }
+    .delete-button:is(input[type="checkbox"], input[type="radio"]) {
+      appearance: none;
+    }
+    .delete-button:is(input[type="checkbox"], input[type="radio"])[aria-label]::after {
+      --tw-content: attr(aria-label);
+      content: var(--tw-content);
+    }
+    .delete-button:where(input:checked:not(.filter .btn)) {
+      --btn-color: var(--color-primary);
+      --btn-fg: var(--color-primary-content);
+      isolation: isolate;
+    }
+  }
+  @layer daisyui.l1.l2 {
+    .delete-button:disabled {
+      pointer-events: none;
+      --btn-border: #0000;
+      --btn-noise: none;
+      --btn-fg: var(--color-base-content);
+    }
+    .delete-button:disabled:not(.btn-link, .btn-ghost) {
+      background-color: var(--color-base-content);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .delete-button:disabled:not(.btn-link, .btn-ghost) {
+        background-color: color-mix(in oklab, var(--color-base-content) 10%, transparent);
+      }
+    }
+    .delete-button:disabled:not(.btn-link, .btn-ghost) {
+      box-shadow: none;
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .delete-button:disabled {
+        --btn-fg: color-mix(in oklch, var(--color-base-content) 20%, #0000);
+      }
+    }
+  }
+  @layer daisyui.l1.l2 {
+    .delete-button[disabled] {
+      pointer-events: none;
+      --btn-border: #0000;
+      --btn-noise: none;
+      --btn-fg: var(--color-base-content);
+    }
+    .delete-button[disabled]:not(.btn-link, .btn-ghost) {
+      background-color: var(--color-base-content);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .delete-button[disabled]:not(.btn-link, .btn-ghost) {
+        background-color: color-mix(in oklab, var(--color-base-content) 10%, transparent);
+      }
+    }
+    .delete-button[disabled]:not(.btn-link, .btn-ghost) {
+      box-shadow: none;
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .delete-button[disabled] {
+        --btn-fg: color-mix(in oklch, var(--color-base-content) 20%, #0000);
+      }
+    }
+  }
+  .delete-button {
+    background-color: var(--color-red-200);
+  }
+  @media (hover: hover) {
+    .delete-button:hover {
+      background-color: var(--color-red-300);
+    }
   }
   .post-card {
     margin-inline: calc(var(--spacing) * 2);
     margin-block: calc(var(--spacing) * 2);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-lg);
     border-style: var(--tw-border-style);
     border-width: 1px;
     border-color: var(--color-gray-400);
-    background-color: var(--color-gray-50);
+    background-color: var(--color-taupe-50);
     padding: calc(var(--spacing) * 4);
     --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 2px 4px -2px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
@@ -1617,6 +2018,7 @@
     margin-bottom: calc(var(--spacing) * 4);
     display: flex;
     flex-direction: column;
+    gap: calc(var(--spacing) * 1);
   }
   @media (width >= 40rem) {
     .post-header {
@@ -1650,6 +2052,567 @@
     max-width: 70ch;
     color: var(--color-gray-700);
   }
+  .crud-title {
+    margin-bottom: calc(var(--spacing) * 12);
+    display: flex;
+    justify-content: center;
+  }
+  .crud-title-two {
+    margin-bottom: calc(var(--spacing) * 6);
+    font-size: var(--text-xl);
+    line-height: var(--tw-leading, var(--text-xl--line-height));
+  }
+  @layer daisyui.l1.l2.l3 {
+    .base-field {
+      cursor: text;
+      border: var(--border) solid #0000;
+      position: relative;
+      display: inline-flex;
+      flex-shrink: 1;
+      appearance: none;
+      align-items: center;
+      gap: calc(0.25rem * 2);
+      background-color: var(--color-base-100);
+      padding-inline: calc(0.25rem * 3);
+      vertical-align: middle;
+      white-space: nowrap;
+      width: clamp(3rem, 20rem, 100%);
+      height: var(--size);
+      font-size: max(var(--font-size, 0.875rem), 0.875rem);
+      touch-action: manipulation;
+      border-start-start-radius: var(--join-ss, var(--radius-field));
+      border-start-end-radius: var(--join-se, var(--radius-field));
+      border-end-start-radius: var(--join-es, var(--radius-field));
+      border-end-end-radius: var(--join-ee, var(--radius-field));
+      border-color: var(--input-color);
+      box-shadow: 0 1px var(--input-color) inset, 0 -1px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset;
+      --size: calc(var(--size-field, 0.25rem) * 10);
+      --input-color: var(--color-base-content);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .base-field {
+        box-shadow: 0 1px color-mix(in oklab, var(--input-color) calc(var(--depth) * 10%), #0000) inset, 0 -1px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset;
+      }
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .base-field {
+        --input-color: color-mix(in oklab, var(--color-base-content) 20%, #0000);
+      }
+    }
+    .base-field:where(input) {
+      display: inline-flex;
+    }
+    .base-field :where(input) {
+      display: inline-flex;
+      height: 100%;
+      width: 100%;
+      appearance: none;
+      background-color: transparent;
+      border: none;
+    }
+    .base-field :where(input):focus, .base-field :where(input):focus-within {
+      --tw-outline-style: none;
+      outline-style: none;
+    }
+    @media (forced-colors: active) {
+      .base-field :where(input):focus, .base-field :where(input):focus-within {
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+      }
+    }
+    .base-field :where(input[type="url"]), .base-field :where(input[type="email"]) {
+      direction: ltr;
+    }
+    .base-field :where(input[type="date"]) {
+      display: inline-flex;
+    }
+    .base-field:focus, .base-field:focus-within {
+      --input-color: var(--color-base-content);
+      box-shadow: 0 1px var(--input-color);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .base-field:focus, .base-field:focus-within {
+        box-shadow: 0 1px color-mix(in oklab, var(--input-color) calc(var(--depth) * 10%), #0000);
+      }
+    }
+    .base-field:focus, .base-field:focus-within {
+      outline: 2px solid var(--input-color);
+      outline-offset: 2px;
+      isolation: isolate;
+    }
+    @media (pointer: coarse) {
+      @supports (-webkit-touch-callout: none) {
+        .base-field:focus, .base-field:focus-within {
+          --font-size: 1rem;
+        }
+      }
+    }
+    .base-field:has(> input[disabled]), .base-field:is(:disabled, [disabled]), fieldset:disabled .base-field {
+      cursor: not-allowed;
+      border-color: var(--color-base-200);
+      background-color: var(--color-base-200);
+      color: var(--color-base-content);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .base-field:has(> input[disabled]), .base-field:is(:disabled, [disabled]), fieldset:disabled .base-field {
+        color: color-mix(in oklab, var(--color-base-content) 40%, transparent);
+      }
+    }
+    .base-field:has(> input[disabled])::placeholder, .base-field:is(:disabled, [disabled])::placeholder, fieldset:disabled .base-field::placeholder {
+      color: var(--color-base-content);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .base-field:has(> input[disabled])::placeholder, .base-field:is(:disabled, [disabled])::placeholder, fieldset:disabled .base-field::placeholder {
+        color: color-mix(in oklab, var(--color-base-content) 20%, transparent);
+      }
+    }
+    .base-field:has(> input[disabled]), .base-field:is(:disabled, [disabled]), fieldset:disabled .base-field {
+      box-shadow: none;
+    }
+    .base-field:has(> input[disabled]) > input[disabled] {
+      cursor: not-allowed;
+    }
+    .base-field::-webkit-date-and-time-value {
+      text-align: inherit;
+    }
+    .base-field[type="number"]::-webkit-inner-spin-button {
+      margin-block: calc(0.25rem * -3);
+      margin-inline-end: calc(0.25rem * -3);
+    }
+    .base-field::-webkit-calendar-picker-indicator {
+      position: absolute;
+      inset-inline-end: 0.75em;
+    }
+    .base-field:has(> input[type="date"]) :where(input[type="date"]) {
+      display: inline-flex;
+      webkit-appearance: none;
+      appearance: none;
+    }
+    .base-field:has(> input[type="date"]) input[type="date"]::-webkit-calendar-picker-indicator {
+      position: absolute;
+      inset-inline-end: 0.75em;
+      width: 1em;
+      height: 1em;
+      cursor: pointer;
+    }
+  }
+  .base-field {
+    margin-top: calc(var(--spacing) * 2);
+    width: calc(var(--spacing) * 54);
+  }
+  @layer daisyui.l1.l2.l3 {
+    .signup-field {
+      cursor: text;
+      border: var(--border) solid #0000;
+      position: relative;
+      display: inline-flex;
+      flex-shrink: 1;
+      appearance: none;
+      align-items: center;
+      gap: calc(0.25rem * 2);
+      background-color: var(--color-base-100);
+      padding-inline: calc(0.25rem * 3);
+      vertical-align: middle;
+      white-space: nowrap;
+      width: clamp(3rem, 20rem, 100%);
+      height: var(--size);
+      font-size: max(var(--font-size, 0.875rem), 0.875rem);
+      touch-action: manipulation;
+      border-start-start-radius: var(--join-ss, var(--radius-field));
+      border-start-end-radius: var(--join-se, var(--radius-field));
+      border-end-start-radius: var(--join-es, var(--radius-field));
+      border-end-end-radius: var(--join-ee, var(--radius-field));
+      border-color: var(--input-color);
+      box-shadow: 0 1px var(--input-color) inset, 0 -1px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset;
+      --size: calc(var(--size-field, 0.25rem) * 10);
+      --input-color: var(--color-base-content);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .signup-field {
+        box-shadow: 0 1px color-mix(in oklab, var(--input-color) calc(var(--depth) * 10%), #0000) inset, 0 -1px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset;
+      }
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .signup-field {
+        --input-color: color-mix(in oklab, var(--color-base-content) 20%, #0000);
+      }
+    }
+    .signup-field:where(input) {
+      display: inline-flex;
+    }
+    .signup-field :where(input) {
+      display: inline-flex;
+      height: 100%;
+      width: 100%;
+      appearance: none;
+      background-color: transparent;
+      border: none;
+    }
+    .signup-field :where(input):focus, .signup-field :where(input):focus-within {
+      --tw-outline-style: none;
+      outline-style: none;
+    }
+    @media (forced-colors: active) {
+      .signup-field :where(input):focus, .signup-field :where(input):focus-within {
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+      }
+    }
+    .signup-field :where(input[type="url"]), .signup-field :where(input[type="email"]) {
+      direction: ltr;
+    }
+    .signup-field :where(input[type="date"]) {
+      display: inline-flex;
+    }
+    .signup-field:focus, .signup-field:focus-within {
+      --input-color: var(--color-base-content);
+      box-shadow: 0 1px var(--input-color);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .signup-field:focus, .signup-field:focus-within {
+        box-shadow: 0 1px color-mix(in oklab, var(--input-color) calc(var(--depth) * 10%), #0000);
+      }
+    }
+    .signup-field:focus, .signup-field:focus-within {
+      outline: 2px solid var(--input-color);
+      outline-offset: 2px;
+      isolation: isolate;
+    }
+    @media (pointer: coarse) {
+      @supports (-webkit-touch-callout: none) {
+        .signup-field:focus, .signup-field:focus-within {
+          --font-size: 1rem;
+        }
+      }
+    }
+    .signup-field:has(> input[disabled]), .signup-field:is(:disabled, [disabled]), fieldset:disabled .signup-field {
+      cursor: not-allowed;
+      border-color: var(--color-base-200);
+      background-color: var(--color-base-200);
+      color: var(--color-base-content);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .signup-field:has(> input[disabled]), .signup-field:is(:disabled, [disabled]), fieldset:disabled .signup-field {
+        color: color-mix(in oklab, var(--color-base-content) 40%, transparent);
+      }
+    }
+    .signup-field:has(> input[disabled])::placeholder, .signup-field:is(:disabled, [disabled])::placeholder, fieldset:disabled .signup-field::placeholder {
+      color: var(--color-base-content);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .signup-field:has(> input[disabled])::placeholder, .signup-field:is(:disabled, [disabled])::placeholder, fieldset:disabled .signup-field::placeholder {
+        color: color-mix(in oklab, var(--color-base-content) 20%, transparent);
+      }
+    }
+    .signup-field:has(> input[disabled]), .signup-field:is(:disabled, [disabled]), fieldset:disabled .signup-field {
+      box-shadow: none;
+    }
+    .signup-field:has(> input[disabled]) > input[disabled] {
+      cursor: not-allowed;
+    }
+    .signup-field::-webkit-date-and-time-value {
+      text-align: inherit;
+    }
+    .signup-field[type="number"]::-webkit-inner-spin-button {
+      margin-block: calc(0.25rem * -3);
+      margin-inline-end: calc(0.25rem * -3);
+    }
+    .signup-field::-webkit-calendar-picker-indicator {
+      position: absolute;
+      inset-inline-end: 0.75em;
+    }
+    .signup-field:has(> input[type="date"]) :where(input[type="date"]) {
+      display: inline-flex;
+      webkit-appearance: none;
+      appearance: none;
+    }
+    .signup-field:has(> input[type="date"]) input[type="date"]::-webkit-calendar-picker-indicator {
+      position: absolute;
+      inset-inline-end: 0.75em;
+      width: 1em;
+      height: 1em;
+      cursor: pointer;
+    }
+  }
+  .signup-field {
+    margin-top: calc(var(--spacing) * 2);
+    width: calc(var(--spacing) * 54);
+  }
+  @media (width >= 48rem) {
+    .signup-field {
+      width: calc(var(--spacing) * 72);
+    }
+  }
+  @layer daisyui.l1.l2.l3 {
+    .title-field {
+      cursor: text;
+      border: var(--border) solid #0000;
+      position: relative;
+      display: inline-flex;
+      flex-shrink: 1;
+      appearance: none;
+      align-items: center;
+      gap: calc(0.25rem * 2);
+      background-color: var(--color-base-100);
+      padding-inline: calc(0.25rem * 3);
+      vertical-align: middle;
+      white-space: nowrap;
+      width: clamp(3rem, 20rem, 100%);
+      height: var(--size);
+      font-size: max(var(--font-size, 0.875rem), 0.875rem);
+      touch-action: manipulation;
+      border-start-start-radius: var(--join-ss, var(--radius-field));
+      border-start-end-radius: var(--join-se, var(--radius-field));
+      border-end-start-radius: var(--join-es, var(--radius-field));
+      border-end-end-radius: var(--join-ee, var(--radius-field));
+      border-color: var(--input-color);
+      box-shadow: 0 1px var(--input-color) inset, 0 -1px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset;
+      --size: calc(var(--size-field, 0.25rem) * 10);
+      --input-color: var(--color-base-content);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .title-field {
+        box-shadow: 0 1px color-mix(in oklab, var(--input-color) calc(var(--depth) * 10%), #0000) inset, 0 -1px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset;
+      }
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .title-field {
+        --input-color: color-mix(in oklab, var(--color-base-content) 20%, #0000);
+      }
+    }
+    .title-field:where(input) {
+      display: inline-flex;
+    }
+    .title-field :where(input) {
+      display: inline-flex;
+      height: 100%;
+      width: 100%;
+      appearance: none;
+      background-color: transparent;
+      border: none;
+    }
+    .title-field :where(input):focus, .title-field :where(input):focus-within {
+      --tw-outline-style: none;
+      outline-style: none;
+    }
+    @media (forced-colors: active) {
+      .title-field :where(input):focus, .title-field :where(input):focus-within {
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+      }
+    }
+    .title-field :where(input[type="url"]), .title-field :where(input[type="email"]) {
+      direction: ltr;
+    }
+    .title-field :where(input[type="date"]) {
+      display: inline-flex;
+    }
+    .title-field:focus, .title-field:focus-within {
+      --input-color: var(--color-base-content);
+      box-shadow: 0 1px var(--input-color);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .title-field:focus, .title-field:focus-within {
+        box-shadow: 0 1px color-mix(in oklab, var(--input-color) calc(var(--depth) * 10%), #0000);
+      }
+    }
+    .title-field:focus, .title-field:focus-within {
+      outline: 2px solid var(--input-color);
+      outline-offset: 2px;
+      isolation: isolate;
+    }
+    @media (pointer: coarse) {
+      @supports (-webkit-touch-callout: none) {
+        .title-field:focus, .title-field:focus-within {
+          --font-size: 1rem;
+        }
+      }
+    }
+    .title-field:has(> input[disabled]), .title-field:is(:disabled, [disabled]), fieldset:disabled .title-field {
+      cursor: not-allowed;
+      border-color: var(--color-base-200);
+      background-color: var(--color-base-200);
+      color: var(--color-base-content);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .title-field:has(> input[disabled]), .title-field:is(:disabled, [disabled]), fieldset:disabled .title-field {
+        color: color-mix(in oklab, var(--color-base-content) 40%, transparent);
+      }
+    }
+    .title-field:has(> input[disabled])::placeholder, .title-field:is(:disabled, [disabled])::placeholder, fieldset:disabled .title-field::placeholder {
+      color: var(--color-base-content);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .title-field:has(> input[disabled])::placeholder, .title-field:is(:disabled, [disabled])::placeholder, fieldset:disabled .title-field::placeholder {
+        color: color-mix(in oklab, var(--color-base-content) 20%, transparent);
+      }
+    }
+    .title-field:has(> input[disabled]), .title-field:is(:disabled, [disabled]), fieldset:disabled .title-field {
+      box-shadow: none;
+    }
+    .title-field:has(> input[disabled]) > input[disabled] {
+      cursor: not-allowed;
+    }
+    .title-field::-webkit-date-and-time-value {
+      text-align: inherit;
+    }
+    .title-field[type="number"]::-webkit-inner-spin-button {
+      margin-block: calc(0.25rem * -3);
+      margin-inline-end: calc(0.25rem * -3);
+    }
+    .title-field::-webkit-calendar-picker-indicator {
+      position: absolute;
+      inset-inline-end: 0.75em;
+    }
+    .title-field:has(> input[type="date"]) :where(input[type="date"]) {
+      display: inline-flex;
+      webkit-appearance: none;
+      appearance: none;
+    }
+    .title-field:has(> input[type="date"]) input[type="date"]::-webkit-calendar-picker-indicator {
+      position: absolute;
+      inset-inline-end: 0.75em;
+      width: 1em;
+      height: 1em;
+      cursor: pointer;
+    }
+  }
+  .title-field {
+    margin-top: calc(var(--spacing) * 2);
+    width: 100%;
+  }
+  @layer daisyui.l1.l2.l3 {
+    .body-field {
+      border: var(--border) solid #0000;
+      min-height: calc(0.25rem * 20);
+      flex-shrink: 1;
+      appearance: none;
+      border-radius: var(--radius-field);
+      background-color: var(--color-base-100);
+      padding-block: calc(0.25rem * 2);
+      vertical-align: middle;
+      width: clamp(3rem, 20rem, 100%);
+      padding-inline-start: 0.75rem;
+      padding-inline-end: 0.75rem;
+      font-size: max(var(--font-size, 0.875rem), 0.875rem);
+      touch-action: manipulation;
+      border-color: var(--input-color);
+      box-shadow: 0 1px var(--input-color) inset, 0 -1px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset;
+      --input-color: var(--color-base-content);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .body-field {
+        box-shadow: 0 1px color-mix(in oklab, var(--input-color) calc(var(--depth) * 10%), #0000) inset, 0 -1px oklch(100% 0 0 / calc(var(--depth) * 0.1)) inset;
+      }
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .body-field {
+        --input-color: color-mix(in oklab, var(--color-base-content) 20%, #0000);
+      }
+    }
+    .body-field textarea {
+      appearance: none;
+      background-color: transparent;
+      border: none;
+    }
+    .body-field textarea:focus, .body-field textarea:focus-within {
+      --tw-outline-style: none;
+      outline-style: none;
+    }
+    @media (forced-colors: active) {
+      .body-field textarea:focus, .body-field textarea:focus-within {
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+      }
+    }
+    .body-field:focus, .body-field:focus-within {
+      --input-color: var(--color-base-content);
+      box-shadow: 0 1px var(--input-color);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .body-field:focus, .body-field:focus-within {
+        box-shadow: 0 1px color-mix(in oklab, var(--input-color) calc(var(--depth) * 10%), #0000);
+      }
+    }
+    .body-field:focus, .body-field:focus-within {
+      outline: 2px solid var(--input-color);
+      outline-offset: 2px;
+      isolation: isolate;
+    }
+    @media (pointer: coarse) {
+      @supports (-webkit-touch-callout: none) {
+        .body-field:focus, .body-field:focus-within {
+          --font-size: 1rem;
+        }
+      }
+    }
+    .body-field:has(> textarea[disabled]), .body-field:is(:disabled, [disabled]) {
+      cursor: not-allowed;
+      border-color: var(--color-base-200);
+      background-color: var(--color-base-200);
+      color: var(--color-base-content);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .body-field:has(> textarea[disabled]), .body-field:is(:disabled, [disabled]) {
+        color: color-mix(in oklab, var(--color-base-content) 40%, transparent);
+      }
+    }
+    .body-field:has(> textarea[disabled])::placeholder, .body-field:is(:disabled, [disabled])::placeholder {
+      color: var(--color-base-content);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .body-field:has(> textarea[disabled])::placeholder, .body-field:is(:disabled, [disabled])::placeholder {
+        color: color-mix(in oklab, var(--color-base-content) 20%, transparent);
+      }
+    }
+    .body-field:has(> textarea[disabled]), .body-field:is(:disabled, [disabled]) {
+      box-shadow: none;
+    }
+    .body-field:has(> textarea[disabled]) > textarea[disabled] {
+      cursor: not-allowed;
+    }
+  }
+  .body-field {
+    margin-top: calc(var(--spacing) * 2);
+    height: calc(var(--spacing) * 32);
+    width: 100%;
+  }
+  .image-input {
+    margin-top: calc(var(--spacing) * 3);
+    display: block;
+    width: 100%;
+  }
+  .image-input::file-selector-button {
+    margin-right: calc(var(--spacing) * 4);
+  }
+  .image-input::file-selector-button {
+    cursor: pointer;
+  }
+  .image-input::file-selector-button {
+    border-radius: var(--radius-lg);
+  }
+  .image-input::file-selector-button {
+    background-color: var(--color-gray-200);
+  }
+  .image-input::file-selector-button {
+    padding-inline: calc(var(--spacing) * 4);
+  }
+  .image-input::file-selector-button {
+    padding-block: calc(var(--spacing) * 2);
+  }
+  .image-input::file-selector-button {
+    font-size: var(--text-sm);
+    line-height: var(--tw-leading, var(--text-sm--line-height));
+  }
+  .image-input::file-selector-button {
+    --tw-font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-semibold);
+  }
+  @media (hover: hover) {
+    .image-input::file-selector-button:hover {
+      background-color: var(--color-gray-300);
+    }
+  }
   .toggle-password-logo {
     position: absolute;
     top: calc(50% + 4px);
@@ -1659,6 +2622,21 @@
     cursor: pointer;
     color: var(--color-black);
     opacity: 50%;
+  }
+  .search-block {
+    position: absolute;
+    right: calc(var(--spacing) * 0);
+    left: calc(var(--spacing) * 0);
+    border-radius: var(--radius-sm);
+    border-inline-style: var(--tw-border-style);
+    border-inline-width: 1px;
+    border-bottom-style: var(--tw-border-style);
+    border-bottom-width: 1px;
+    background-color: var(--color-white);
+    padding-bottom: calc(var(--spacing) * 1);
+    padding-left: calc(var(--spacing) * 2);
+    font-size: var(--text-sm);
+    line-height: var(--tw-leading, var(--text-sm--line-height));
   }
   @layer daisyui.l1.l2.l3 {
     :where(.endless_more) {
@@ -1829,7 +2807,7 @@
   }
   @media (hover: hover) {
     .endless_more:hover {
-      background-color: var(--color-sky-100);
+      background-color: var(--color-sky-300);
     }
   }
   .endless_container {
@@ -2129,6 +3107,11 @@
   inherits: false;
   initial-value: 0;
 }
+@property --tw-border-style {
+  syntax: "*";
+  inherits: false;
+  initial-value: solid;
+}
 @property --tw-font-weight {
   syntax: "*";
   inherits: false;
@@ -2202,11 +3185,6 @@
   syntax: "*";
   inherits: false;
 }
-@property --tw-border-style {
-  syntax: "*";
-  inherits: false;
-  initial-value: solid;
-}
 @layer properties {
   @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
     *, ::before, ::after, ::backdrop {
@@ -2219,6 +3197,7 @@
       --tw-skew-x: initial;
       --tw-skew-y: initial;
       --tw-space-y-reverse: 0;
+      --tw-border-style: solid;
       --tw-font-weight: initial;
       --tw-shadow: 0 0 #0000;
       --tw-shadow-color: initial;
@@ -2235,7 +3214,6 @@
       --tw-ring-offset-color: #fff;
       --tw-ring-offset-shadow: 0 0 #0000;
       --tw-duration: initial;
-      --tw-border-style: solid;
     }
   }
 }

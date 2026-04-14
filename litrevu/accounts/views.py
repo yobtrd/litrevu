@@ -1,26 +1,21 @@
 from accounts.forms import SignUpForm
+from core.widgets import FormWidgetMixin
 from django.contrib import messages
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect, render
 
 
-class CustomLoginView(LoginView):
-    """Login view with placeholder labels."""
+class CustomAuthenticationForm(FormWidgetMixin, AuthenticationForm):
+    """Login view with standardized widget styling."""
 
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        for field in form.fields.values():
-            field.widget.attrs.update(
-                {
-                    "title": "Veuillez remplir ce champ",
-                    "aria-label": field.label,
-                    "placeholder": field.label,
-                    "class": "input md:w-52 mt-2",
-                }
-            )
-            field.label = ""
-            field.help_text = None
-        return form
+    pass
+
+
+class CustomLoginView(LoginView):
+    """Form that automatically applies our widget standards."""
+
+    form_class = CustomAuthenticationForm
 
 
 def signup(request):

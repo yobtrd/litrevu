@@ -8,16 +8,16 @@ class FormWidgetMixin:
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        for name, field in self.fields.items():
+        for field_name, field in self.fields.items():
             field.widget.attrs.update(
                 {
                     "title": "Veuillez remplir ce champ",
                     "aria-label": field.label,
                     "placeholder": field.label,
-                    "class": "input w-54 md:w-72 mt-2",
+                    "class": "base-field",
                 }
             )
-            if "password" in name:
+            if "password" in field_name:
                 field.widget.input_type = "password"
             field.label = ""
             field.help_text = None

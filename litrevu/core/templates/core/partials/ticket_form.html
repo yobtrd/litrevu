@@ -1,0 +1,6 @@
+{% for field in ticket_form %}
+    <div class="mb-8">
+        <label class="font-semibold" for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+    </div>
+{% endfor %}

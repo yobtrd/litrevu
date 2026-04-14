@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@variant dark (false);
 @plugin "daisyui";
 @source "../../../**/*.{html,py,js}";
 
@@ -22,36 +21,75 @@
 }
 
 @layer components {
+  .base-block {
+    @apply flex flex-col rounded-lg bg-sky-100/50 border border-gray-100 shadow-sm p-8 mt-12 w-4/5 max-w-4xl mx-auto;
+  }
+  /* Links and buttons */
+  .personal-post-buttons-display {
+    @apply inline-flex justify-center gap-3 mb-4 mt-1 md:justify-end md:mr-18;
+  }
+  .crud-button-display {
+    @apply flex justify-center sm:justify-end sm:mr-4;
+  }
   .menu-link {
     @apply font-semibold hover:text-gray-400 transition-colors duration-200;
   }
   .core-button {
-    @apply btn text-gray-100 bg-sky-700 hover:bg-sky-800;
+    @apply btn bg-sky-200 hover:bg-sky-300;
   }
-  .base-block {
-    @apply flex flex-col rounded-lg bg-sky-100/50 border border-gray-100 shadow-sm p-8 mt-12 w-4/5 max-w-4xl mx-auto;
+  .delete-button{
+    @apply btn bg-red-200 hover:bg-red-300;
   }
+  /* Feed posts classes */
   .post-card {
-    @apply border border-gray-400 rounded-sm shadow-md bg-gray-50 p-4 my-2 mx-2 sm:mx-12
+    @apply border border-gray-400 rounded-lg shadow-md bg-taupe-50 p-4 my-2 mx-2 sm:mx-12;
   }
   .post-header {
-    @apply flex flex-col mb-4 sm:flex-row sm:justify-between sm:items-baseline
+    @apply flex flex-col gap-1 mb-4 sm:flex-row sm:justify-between sm:items-baseline;
   }
   .post-article {
-    @apply space-y-2 mt-4 sm:pl-6
+    @apply space-y-2 mt-4 sm:pl-6 ;
   }
   .post-p {
-    @apply text-gray-700 max-w-[70ch]
+    @apply text-gray-700 max-w-[70ch];
   }
+  /* CRUD posts classes */
+  .crud-title {
+    @apply flex justify-center mb-12;
+  }
+  .crud-title-two {
+    @apply mb-6 text-xl;
+  }
+  /* Forms widgets classes */
+  .base-field {
+    @apply input w-54 mt-2
+  }
+  .signup-field {
+    @apply input w-54 md:w-72 mt-2
+  }
+  .title-field {
+    @apply input w-full mt-2;
+  }
+  .body-field {
+    @apply textarea w-full h-32 mt-2;
+  }
+  .image-input {
+    @apply mt-3 block w-full file:mr-4 file:text-sm file:font-semibold file:py-2 
+    file:px-4 file:rounded-lg file:bg-gray-200 file:hover:bg-gray-300 file:cursor-pointer;
+  }
+  /* JS objects classes */
   .toggle-password-logo {
     @apply absolute right-2 top-[calc(50%+4px)] -translate-y-1/2 cursor-pointer text-black opacity-50;
   }
+  .search-block {
+    @apply absolute left-0 right-0 border-x border-b rounded-sm bg-white pl-2 pb-1 text-sm
+  }
   /* Overridden class for django-el-pagination button and container */
   .endless_more {
-    @apply  btn w-48 bg-sky-200 hover:bg-sky-100 mt-4 mx-auto;
+    @apply  btn w-48 bg-sky-200 hover:bg-sky-300 mt-4 mx-auto;
   }
   .endless_container {
-    @apply inline-flex justify-center
+    @apply inline-flex justify-center;
   }
 }
 
