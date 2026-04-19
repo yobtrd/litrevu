@@ -250,8 +250,12 @@ def follow_user(request):
                 username=request.user
             )[:5]
             context["search_results"] = search_results
+            context["username"] = username
             if not search_results.exists():
-                messages.info(request, "La recherche n'a donné aucun résultat.")
+                messages.info(
+                    request,
+                    f'La recherche pour "{username}" n\'a donné aucun résultat.',
+                )
 
         if "follow" in request.POST:
             follows_form = FollowsForm(request.POST)
@@ -273,7 +277,7 @@ def follow_user(request):
                 except User.DoesNotExist:
                     messages.error(
                         request,
-                        f"L'utilisateur {follows_form.cleaned_data['username']} "
+                        f"L'utilisateur \"{follows_form.cleaned_data['username']}\" "
                         "n'existe pas.",
                     )
 
@@ -302,6 +306,7 @@ def unblock_user(request, block_id):
     """Removes block and redirects."""
     block = get_object_or_404(UserBlock, id=block_id, blocker=request.user)
     block.delete()
+    messages.info(request, f"Vous avez débloqué {block.blocked.username}.")
     return redirect("follow")
 
 

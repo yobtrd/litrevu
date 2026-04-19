@@ -10,7 +10,7 @@
         <h4>{{ ticket.title }}</h4>
         <p class="post-p">{{ ticket.description }}</p>
         {% if ticket.image %}
-            <img src="{{ ticket.image.url }}">
+            <img src="{{ ticket.image.url }}" alt="image du billet {{ ticket.title }}">
         {% endif %}
     </article>
 

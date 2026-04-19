@@ -8,15 +8,19 @@
 <div class="mb-8 flex flex-col gap-2">
     <label class="font-semibold">Note</label>
     <div class="rating rating-lg">
-        {% for radio in review_form.rating %}
+        {% for radio in review_form.rating %}  
             <input 
                 type="radio" 
-                name="{{ radio.data.name }}" 
+                name="{{ radio.data.name }}"
+                id="{{ radio.id_for_label }}" 
                 value="{{ radio.data.value }}" 
                 class="mask mask-star"
                 {% if radio.data.selected %}checked{% endif %}
                 aria-label="{{ radio.choice_label }}"
             />
+            <label for="{{ radio.id_for_label }}" class="sr-only">
+                {{ radio.choice_label }} étoile
+            </label>
         {% endfor %}
     </div>
 </div>

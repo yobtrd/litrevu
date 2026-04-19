@@ -48,9 +48,5 @@ class FollowsForm(FormWidgetMixin, forms.Form):
 
     username = forms.CharField(
         label="Nom d'utilisateur",
-        widget=forms.TextInput(
-            attrs={
-                "id": "search_user",
-            }
-        ),
+        widget=forms.TextInput(attrs={"id": "search_user"}),
     )

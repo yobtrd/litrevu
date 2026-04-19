@@ -5,7 +5,7 @@
 
     <div class="base-block">
         <h2 class="flex justify-center mb-4">Vos posts</h2>
-        {% if page_template %}
+        {% if posts %}
             {% include page_template %}
                 {% block js %}
                     {{ block.super }}
@@ -14,7 +14,12 @@
                     <script>$.endlessPaginate();</script>
                 {% endblock %}
         {% else %}
-            <p>Vos contenus seront affichées et modifiables ici une fois créées.</p>
+        <div class="alert alert-info bg-taupe-50 mt-6 md:mt-6">
+            <svg id="icon-info" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-6 w-6 shrink-0 stroke-current" role="img" aria-label="icon-info">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>Vos contenus seront affichées et modifiables ici une fois créées.</span>
+        </div>
         {% endif %}
     </div>
 

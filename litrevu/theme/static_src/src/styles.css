@@ -62,7 +62,7 @@
   }
   /* Forms widgets classes */
   .base-field {
-    @apply input w-54 mt-2
+    @apply input md:w-54 mt-2
   }
   .signup-field {
     @apply input w-54 md:w-72 mt-2
@@ -77,12 +77,22 @@
     @apply mt-3 block w-full file:mr-4 file:text-sm file:font-semibold file:py-2 
     file:px-4 file:rounded-lg file:bg-gray-200 file:hover:bg-gray-300 file:cursor-pointer;
   }
+  /* Follows classes */
+  .follow-block {
+    @apply w-[calc(100%-4rem)] border-t flex flex-col text-center items-center mt-8
+  }
+  .list-ul {
+    @apply list bg-taupe-50 rounded-box shadow-sm mb-1 w-50 md:w-80
+  }
+  .list-li {
+    @apply flex justify-between
+  }
   /* JS objects classes */
   .toggle-password-logo {
     @apply absolute right-2 top-[calc(50%+4px)] -translate-y-1/2 cursor-pointer text-black opacity-50;
   }
   .search-block {
-    @apply absolute left-0 right-0 border-x border-b rounded-sm bg-white pl-2 pb-1 text-sm
+    @apply absolute left-0 right-0 border-x border-b rounded-sm bg-white/80 pl-2 py-1 text-sm text-left
   }
   /* Overridden class for django-el-pagination button and container */
   .endless_more {

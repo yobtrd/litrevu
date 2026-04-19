@@ -30,7 +30,7 @@
         <h5 class="font-semibold">Billet - {% get_username_display review.ticket.user %}</h3>
         <h5 class="font-bold">{{ review.ticket.title }}</h3>
         {% if review.ticket.image %}
-            <img src="{{ review.ticket.image.url }}">
+            <img src="{{ review.ticket.image.url }}" alt="image du billet {{ review.ticket.title }}">
         {% endif %}
         <div class="flex justify-center sm:justify-end">
             {%if review.ticket.user != user and review.ticket.part_of_full_review and review.ticket.reviews.count < 2  %}

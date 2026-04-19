@@ -2,67 +2,128 @@
 {% load static %}
 
 {% block content %}
-    <div class="base-block items-center">
+    <div class="base-block text-center items-center">
         {% block js %}
             {{ block.super }}
             <script src="{% static 'js/search-followers.js' %}" defer></script>
         {% endblock %}
 
-        <h2 class="mb-3">Suivre d'autres utilisateurs</h2>
+        <h2 class="mb-4">Suivre d'autres utilisateurs</h2>
 
         {% if messages %}
             {% for message in messages %}
-            <p>{{ message }}</p>
+                <div class= "alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
             {% endfor %}
+        {% else %}
+        <div class="alert alert-info bg-taupe-50">
+            <svg id="icon-info" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-6 w-6 shrink-0 stroke-current" role="img" aria-label="icon-info">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span>Entrez un nom d'utilisateur complet et cliquer sur "Suivre" pour vous abonner, ou sur "Rechercher" pour effectuer une recherche.</span>
+        </div>
         {% endif %}
         
-        <form method="post" class="flex items-center gap-4">
-            <div class="flex-grow relative">
+        <form method="post" class="flex items-center gap-4 mt-8 mb-12">
+            <div class="relative">
+                <label for="{{ follows_form.username.id_for_label }}" class="sr-only">
+                    {{ follows_form.username.label }}
+                </label>  
                 {{ follows_form.username }}
                 {% csrf_token %}
             </div>
-            <div class="flex gap-2 mt-2">
-                <button type="submit" name="follow" class="btn btn-sm btn-soft">Suivre</button>
-                <button type="submit" name="search" class="btn btn-sm btn-soft">Rechercher</button>
+            <div class="flex flex-col md:flex md:flex-row gap-2 mt-2">
+                <button type="submit" name="follow" class="btn  btn-xs md:btn-sm btn-soft">Suivre</button>
+                <button type="submit" name="search" class="btn btn-xs md:btn-sm btn-soft">Rechercher</button>
             </div>
         </form>
 
         {% if search_results %}
+            <div class= "alert alert-info mt-4">
+                Résultats de votre recherche pour "{{ username }}."
+            </div>
+            <ul class="list-disc mt-2">
             {% for user in search_results %}
-            <form method="post">
-                {% csrf_token %}
+            <form method="post">        
                 <input type="hidden" name="username" value="{{ user.username }}">
-                <div>
+                <li class="mb-1">
                     {{ user.username }} 
-                    <button type="submit" name="follow">Suivre</button>
-                </div>
+                    <button type="submit" name="follow" class="btn btn-xs btn-soft bg-sky-200 hover:bg-sky-300 ml-2">Suivre</button>
+                </li>
+                {% csrf_token %}
             </form>
             {% endfor %}
+            </ul>
         {% endif %}
+        
+        <div class="follow-block">
+            <h3 class="my-6">Abonnements</h3>
+            {%if following %}
+                {% for follow in following %}
+                    <ul class="list-ul">
+                        <li class="list-row list-li">
+                            <div>
+                                {{ follow.followed_user.username }}
+                            </div>
+                            <div>
+                                <a href="{% url 'unfollow' follow.id %}" class="btn btn-xs btn-outline">Désabonner</a><br>
+                            </div>
+                        </li>
+                    </ul>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-info bg-taupe-50">
+                    <svg id="icon-info" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-6 w-6 shrink-0 stroke-current" role="img" aria-label="icon-info">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>Vous n'êtes abonné à aucun utilisateur pour le moment.</span>
+                </div>
+            {% endif %}
+        </div>
 
-        <h3>Abonnements</h3>
-        {%if following %}
-            {% for follow in following %}
-                {{ follow.followed_user.username }} <a href="{% url 'unfollow' follow.id %}">Désabonner</a><br> 
-            {% endfor %}
-        {% else %}
-            <p>Vous n'avez aucun abonnement pour le moment !</p>
-        {% endif %}
+        <div>
+            <h3 class="my-6">Abonnés</h3>
+            {% if followers %}
+                {% for follower in followers %}
+                    <ul class="list-ul">
+                        <li class="list-row list-li">
+                            <div>
+                                {{ follower.user.username }}
+                            </div>
+                            <div>
+                                <a href="{% url 'block' follower.id %}" class="btn btn-xs btn-soft bg-red-200 hover:bg-red-300">Bloquer</a>
+                            </div>
+                        </li>
+                    </ul>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-info bg-taupe-50">
+                    <svg id="icon-info" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-6 w-6 shrink-0 stroke-current" role="img" aria-label="icon-info">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span>Vous n'avez aucun abonné pour le moment.</span>
+                </div>
+            {% endif %}
+        </div>
 
-        <h3>Abonnés</h3>
-        {% if followers %}
-            {% for follower in followers %}
-                {{ follower.user.username }} <a href="{% url 'block' follower.id %}">Bloquer</a><br>
-            {% endfor %}
-        {% else %}
-            <p>Vous n'avez aucun abonné pour le moment !</p>
-        {% endif %}
-
+        
         {% if blocked_users %}
-            <h3>Bloqués</h3>
-            {% for blocked_user in blocked_users %}
-                {{ blocked_user.blocked.username }} <a href="{% url 'unblock' blocked_user.id %}">Débloquer</a>
-            {% endfor %}
+            <div class="follow-block">
+                <h3 class="my-6">Bloqués</h3>
+                {% for blocked_user in blocked_users %}
+                    <ul class="list-ul">
+                        <li class="list-row list-li">
+                            <div>
+                                {{ blocked_user.blocked.username }} 
+                            </div>
+                            <div>
+                                <a href="{% url 'unblock' blocked_user.id %}" class="btn btn-xs btn-outline">Débloquer</a>
+                            </div>
+                        </li>
+                    </ul>
+                {% endfor %}
+            </div>
         {% endif %}
     </div>
 

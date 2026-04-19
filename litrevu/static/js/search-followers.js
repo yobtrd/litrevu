@@ -24,13 +24,15 @@ function searchFollowers() {
         const response = await fetch(`/follow/api/search_user/?q=${e.target.value}`);
         const data = await response.json();
         
-        resultsDiv.innerHTML = data.results.map(u => `
-            <div>
-                ${u.username}
-            </div>
-        `).join('');
-        resultsDiv.classList.remove('hidden');
-        resultsDiv.classList.add('search-block')
+        if (data.results.length > 0) {
+            resultsDiv.innerHTML = data.results.map(u => `
+                <div>
+                    ${u.username}
+                </div>
+            `).join('');
+            resultsDiv.classList.remove('hidden');
+            resultsDiv.classList.add('search-block')
+        }
     });
     hideOnClickOutside(searchInput, resultsDiv)
 };

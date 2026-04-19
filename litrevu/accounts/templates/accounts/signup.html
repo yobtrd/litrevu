@@ -10,8 +10,22 @@
 
     <div class="base-block items-center md:mt-32">
     <h2 class="mb-3">Inscrivez-vous</h2>
+
+            {% if form.errors %}
+            <div class="alert alert-error mb-4">
+                {% for field in form %}
+                    {{ field.errors }}
+                {% endfor %}
+            </div>
+            {% endif %}
+
             <form method="post" class="text-center">
-                {{ form.as_p }}
+                {% for field in form %}  
+                    <label for="{{ field.id_for_label }}" class="sr-only">
+                        {{ field.label }}
+                    </label>      
+                    <p>{{ field }}</p>
+                {% endfor %}
                 {% csrf_token %}
                 <button type="submit" class="btn btn-soft mt-4 mb-2">S'inscrire</button>
             </form>
