@@ -13,10 +13,13 @@
                     <script src="http://code.jquery.com/jquery-latest.js"></script>
                     <script src="{% static 'js/el-pagination.js' %}"></script>
                     <script>$.endlessPaginate();</script>
+                    <script src="{% static 'js/back-to-top.js' %}" defer></script>
                 {% endblock %}
         {% else %}
             {% alert_info "Vos contenus seront affichés et pourront être modifiés ici après leur création." "mt-6 md:mt-6" %}
         {% endif %}
+
+        {% back_to_top_button %}
     </div>
 
 {% endblock content %}

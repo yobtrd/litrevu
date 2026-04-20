@@ -92,7 +92,10 @@
     @apply absolute right-2 top-[calc(50%+4px)] -translate-y-1/2 cursor-pointer text-black opacity-50;
   }
   .search-block {
-    @apply absolute left-0 right-0 border-x border-b rounded-sm bg-white/80 pl-2 py-1 text-sm text-left
+    @apply absolute left-0 right-0 border-x border-b rounded-sm bg-white/80 pl-2 py-1 text-sm text-left;
+  }
+  .back-to-top-button {
+    @apply text-black opacity-50 fixed right-[calc(11%)] lg:right-[max(calc(50%-27rem))] bottom-8 cursor-pointer size-7 md:size-8;
   }
   /* Overridden class for django-el-pagination button and container */
   .endless_more {

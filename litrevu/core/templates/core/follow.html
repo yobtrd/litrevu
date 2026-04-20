@@ -18,7 +18,7 @@
                 </div>
             {% endfor %}
         {% else %}
-            {% alert_info "Recherchez un utilisateur par son nom exact ou utilisez la recherche partielle ci-dessous." %} 
+            {% alert_info "Suivez un utilisateur après avoir saisi son nom exact ou utilisez la recherche partielle ci-dessous." %} 
         {% endif %}
         
         <form method="post" class="flex items-center gap-4 mt-8 mb-12">
@@ -44,8 +44,8 @@
                     <form method="post">        
                         <input type="hidden" name="username" value="{{ user.username }}">
                         <li class="mb-1">
-                            {{ user.username }} 
-                            <button type="submit" name="follow" class="btn btn-xs btn-soft bg-sky-200 hover:bg-sky-300 ml-2">Suivre</button>
+                            <span class="inline-block w-28">{{ user.username }}</span>
+                            <button type="submit" name="follow" class="btn btn-xs btn-soft bg-sky-200 hover:bg-sky-300 ml-4">Suivre</button>
                         </li>
                         {% csrf_token %}
                     </form>

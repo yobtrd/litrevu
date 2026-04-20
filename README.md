@@ -88,7 +88,7 @@ http://127.0.0.1:8000/
 
 Un fichier SQLite est inclus avec le repository et contient des données de test afin de faciliter l'aperçu des fonctionnalités.
 
-Vous pouvez vous connecter au différents utilisateurs factices via ces informations de connexion :
+Vous pouvez vous connecter aux différents utilisateurs factices via ces informations de connexion :
 
 | Rôle          | Identifiant | Mot de passe    |
 |---------------|-------------|-----------------|
