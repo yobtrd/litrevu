@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load core_extras %}
 
 {% block content %}
 
@@ -20,11 +21,18 @@
             <script>$.endlessPaginate();</script>
         {% endblock %}
     {% else %}
-        <div class="alert alert-info bg-taupe-50 mt-6 md:mt-12">
-            <svg id="icon-info" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-6 w-6 shrink-0 stroke-current" role="img" aria-label="icon-info">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        <div class="alert alert-info bg-taupe-50 mt-6 md:mt-6">
+            <svg id="icon-info"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                class="h-6 w-6 shrink-0 stroke-current"
+                aria-label="icon-info">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            <span>Poster et <a href="{% url 'follow' %}" class="font-semibold hover:underline">abonnez-vous</a> à des utilisateur pour voir afficher du contenu ici !</span>
+            <span>Créez des posts et <a href="{% url 'follow' %}" class="font-semibold hover:underline">abonnez-vous</a> à d'autres utilisateurs pour voir du contenu apparaître ici !</span>
         </div>
     {% endif %}
 

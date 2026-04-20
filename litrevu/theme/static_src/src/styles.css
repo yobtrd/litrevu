@@ -40,7 +40,7 @@
   .delete-button{
     @apply btn bg-red-200 hover:bg-red-300;
   }
-  /* Feed posts classes */
+  /* Posts classes */
   .post-card {
     @apply border border-gray-400 rounded-lg shadow-md bg-taupe-50 p-4 my-2 mx-2 sm:mx-12;
   }

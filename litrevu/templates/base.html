@@ -8,6 +8,7 @@
         <title>LITRevu</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="{% static 'images/logo.svg' %}" type="image/svg+xml">
         {% tailwind_css %}
     </head>
 
@@ -15,7 +16,6 @@
 
         <header class="relative w-full py-4 px-6 bg-sky-100/70 shadow-lg min-h-[80px] flex flex-col items-center 
                       lg:flex-row lg:justify-center">
-
             <div class="absolute left-1/2 transform -translate-x-1/2 flex items-center">
                 <img src="{% static 'images/logo.svg' %}" alt="Logo LITRevu" class="h-12">
                 <h1 class="text-4xl font-medium text-black">LITRevu</h1>
@@ -32,8 +32,7 @@
                         <button type="submit" class="cursor-pointer">Se déconnecter</button>
                     </form>
                 </nav>
-            {%  endif %}
-
+            {% endif %}
          </header>
 
         {% block content %}{% endblock content %}

@@ -4,12 +4,12 @@
 
     <div class="base-block items-center">
         <h2 class="crud-title">Supprimer votre critique</h2>
-        <p class="font-semibold">Êtes-vous sûr de vouloir supprimer cete critique ?</p>
+        <p class="font-semibold">Êtes-vous sûr de vouloir supprimer cette critique ?</p>
         <form method="post">
             {% csrf_token %}
             <button type="submit" class="delete-button mt-4">Supprimer</button>
         </form>
-        <a href="{% url "personal_posts" %}" class="btn btn-outline mt-4">Annuler</a>
+        <a href="{% url 'personal_posts' %}" class="btn btn-outline mt-4">Annuler</a>
     </div>
 
 {% endblock content %}

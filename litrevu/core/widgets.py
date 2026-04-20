@@ -2,8 +2,8 @@ class FormWidgetMixin:
     """
     Generic form styling mixin that standardizes field attributes.
 
-    Automatically transforms labels into placeholders and handles
-    password field masking.
+    Automatically transforms labels into placeholders, handles accessibility
+    and password field masking.
     """
 
     def __init__(self, *args, **kwargs):

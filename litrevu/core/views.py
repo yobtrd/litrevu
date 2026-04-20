@@ -7,14 +7,18 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.db.models import CharField, Q, Value
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from el_pagination.decorators import page_template
-from django.http import JsonResponse
 
 
 @login_required
 @page_template("core/partials/posts_feed.html")
 def feed(request, template="core/feed.html", extra_context=None):
+    """Main authenticated feed view combining tickets and reviews.
+    - Uses django-el-pagination via @page_template decorator
+    - Excludes tickets part_of_full_review
+    """
 
     tickets = get_feed_tickets(request.user).filter(part_of_full_review=False)
     reviews = get_feed_reviews(request.user)
@@ -28,17 +32,15 @@ def feed(request, template="core/feed.html", extra_context=None):
 
 
 def get_feed_tickets(user):
-    """
-    Retrieves tickets visible in user's feed: own and from followed users.
-    """
+    """Retrieves tickets visible in user's feed: own and from followed users."""
     return Ticket.objects.filter(
         Q(user=user) | Q(user__in=user.following.values("followed_user"))
     )
 
 
 def get_feed_reviews(user):
-    """
-    Retrieves reviews visible in feed: own, from followed users, or about own tickets.
+    """Retrieves reviews visible in feed: own, from followed users,
+    or about own tickets.
     """
     return Review.objects.filter(
         Q(user=user)
@@ -50,8 +52,8 @@ def get_feed_reviews(user):
 @login_required
 @page_template("core/partials/personal_posts_feed.html")
 def personal_posts(request, template="core/personal_posts.html", extra_context=None):
-    """
-    Personal posts view showing only the authenticated user's content.
+    """Personal posts view showing only the authenticated user's content.
+    - Uses django-el-pagination via @page_template decorator
     """
     tickets = Ticket.objects.filter(user=request.user)
     reviews = Review.objects.filter(user=request.user)
@@ -65,8 +67,7 @@ def personal_posts(request, template="core/personal_posts.html", extra_context=N
 
 
 def get_posts_feed(tickets, reviews):
-    """
-    Merges tickets and reviews into unified feed with type annotations.
+    """Merges tickets and reviews into unified feed with type annotations.
 
     Annotates each queryset with content_type ('TICKET'/'REVIEW') and combines them
     chronologically (newest first) using time_created.
@@ -79,7 +80,15 @@ def get_posts_feed(tickets, reviews):
 
 
 def check_object_owner(model_object, id, owner="user"):
-    """Factory creating decorators verifying object ownership before view execution."""
+    """Factory creating decorators verifying object ownership before view execution.
+
+    Parameters:
+    model_object: Django model class to verify
+    id_param (str): URL parameter name containing object ID
+    owner (str): Attribute name for ownership relation (default: 'user')
+
+    Returns:
+    function: Decorator verifying request.user owns the specified object"""
 
     def decorator(func):
         def wrapper(request, *args, **kwargs):
@@ -95,9 +104,7 @@ def check_object_owner(model_object, id, owner="user"):
 
 @login_required
 def create_ticket(request):
-    """
-    Handles ticket creation with file upload capability.
-    """
+    """Handles ticket creation with file upload capability."""
     ticket_form = TicketForm()
     if request.method == "POST":
         ticket_form = TicketForm(request.POST, request.FILES)
@@ -311,6 +318,7 @@ def unblock_user(request, block_id):
 
 
 def api_user_search(request):
+    """AJAX endpoint for username search. Requires 'q' GET param."""
     if not request.GET.get("q"):
         return JsonResponse({"error": "Paramètre 'q' manquant"}, status=400)
 

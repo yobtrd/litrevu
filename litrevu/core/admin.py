@@ -1,7 +1,6 @@
+from core.models import Review, Ticket, UserFollows
 from django.contrib import admin
-from core.models import Ticket, Review, UserFollows
 
 admin.site.register(Ticket)
 admin.site.register(Review)
 admin.site.register(UserFollows)
-
