@@ -17,7 +17,7 @@ Application web communautaire permettant aux utilisateurs de partager et demande
 - **Flux personnalisé** : Affichage chronologique des publications des utilisateurs suivis
 - **Accessibilité** : 
   - Design responsive adapté à tous les appareils
-  - Normes d'accessibilités adaptées au référentiel WCAG.
+  - Normes d'accessibilité conformes au référentiel WCAG
 
 ### Stack technique
 
@@ -43,7 +43,8 @@ Application web communautaire permettant aux utilisateurs de partager et demande
 
 ## Installation
 
-- Cloner ou sauvegarder le dépôt dans le répertoire de travail de votre choix.
+- Cloner ou sauvegarder le dépôt à l'emplacement de votre choix.
+- Déplacer vous dans le dossier du dépôt ("litrevu"), qui deviendra votre répertoire de travail.
 - Créer un environnement virtuel pour installer les dépendances.  
 Pour ce faire, dans le répertoire de travail:
 
