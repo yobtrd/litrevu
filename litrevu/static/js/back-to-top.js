@@ -9,10 +9,8 @@ function BackToTopButton() {
     btn.setAttribute('title', 'Revenir en haut');
     if (!btn) return;
     
-    // Force l'état initial immédiatement
     btn.classList.add('hidden');
     
-    // Puis la logique normale
     window.addEventListener('scroll', () => {
         btn.classList.toggle('hidden', window.scrollY <= 1000);
     });

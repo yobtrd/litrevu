@@ -29,8 +29,10 @@ Application web communautaire permettant aux utilisateurs de partager et demande
 - DaisyUI (composants Tailwind prêts à l'emploi)  
 - Heroicons (bibliothèque d'icônes SVG)
 
-**Extensions Django** :  
+**Packages Django** :  
 - django-el-pagination ([lien PyPI](https://pypi.org/project/django-el-pagination/)) - pagination "infinite scroll"
+- django-tailwind ([lien PyPi](https://pypi.org/project/django-tailwind/)) - Tailwind CSS intégration pour Django
+- django-browser-reload ([lien PyPi](https://pypi.org/project/django-browser-reload/)) - Actualisation du navigateur à chaque modification du code
 
 **Base de données** :  
 - SQLite (développement)  
@@ -39,14 +41,15 @@ Application web communautaire permettant aux utilisateurs de partager et demande
 
 - Python `3.8+` ;
 - (Optionnel) Git pour cloner le dépôt ;
+- (Optionnel) Node.JS pour utiliser django-tailwind en mode développement ;
 - Compatible avec n'importe quel OS (Windows/Linux/macOS).
 
 ## Installation
 
-- Cloner ou sauvegarder le dépôt à l'emplacement de votre choix.
-- Déplacer vous dans le dossier du dépôt ("litrevu"), qui deviendra votre répertoire de travail.
+- Cloner ou sauvegarder le dépôt à l'emplacement de votre choix ;
+- Déplacer vous dans le dossier du dépôt ("litrevu"), qui deviendra votre répertoire de travail ;
 - Créer un environnement virtuel pour installer les dépendances.  
-Pour ce faire, dans le répertoire de travail:
+Pour ce faire, dans le répertoire de travail :
 
 ```bash
 python -m venv env
@@ -67,7 +70,7 @@ pip install -r requirements.txt
 
 ## Usage
 
-- Depuis le répertoire de travail, une fois votre environnement virtuel activé, déplacer vous dans le répertoire principal de l'application:
+- Depuis le répertoire de travail, une fois votre environnement virtuel activé, déplacer vous dans le répertoire principal de l'application :
 
 ```bash
 cd litrevu/
@@ -83,9 +86,41 @@ python manage.py runserver # ou py manage.py runserver sur windows
 
 http://127.0.0.1:8000/
 
-- Créez vous un compte ou utiliser un compte fourni dans la BDD via les informations de connexion ci-dessous.
+- Créez vous un compte ou utiliser un compte fourni dans la BDD via les informations de connexion disponibles ci-dessous.
 
-### Base de données de démonstration
+### Mode développement
+
+Le CSS généré via django-tailwind est actuellement optimisé pour la production (notamment via PurgeCSS).  
+Revenir en mode développement de django-tailwind et profiter de django-browser-reload nécessite Node.js (v14+ recommandée) et l'installation des dépendances.  
+Pour ce faire, depuis le répertoire principal de l'application, déplacez vous dans le dossier static_src :
+
+```bash
+cd theme/static_src
+```
+
+- Installer les dépendances NPM avec :
+
+```bash
+npm install
+```
+
+Une fois l'environnement correctement installé, et une fois le serveur démarré dans un terminal :  
+- Lancer un second terminal et saisissez la commande suivante :
+
+
+```bash
+python manage.py tailwind start
+```
+
+Et pour créer à nouveau une version compilée pour la production :
+
+```bash
+python manage.py tailwind build
+```
+
+Pour plus d'informations, se référer à la [documentation](https://django-tailwind.readthedocs.io/en/latest/index.html) de Django-Tailwind.
+
+## Base de données de démonstration
 
 Un fichier SQLite est inclus avec le repository et contient des données de test afin de faciliter l'aperçu des fonctionnalités.
 

@@ -50,7 +50,7 @@ def alert_info(message, css=None):
 def back_to_top_button():
     return mark_safe(
         """
-        <button id="back-to-top" class="back-to-top-button">
+        <button id="back-to-top" class="back-to-top-button hidden">
             <svg xmlns="http://www.w3.org/2000/svg"
                  fill="none"
                  viewBox="0 0 24 24"
